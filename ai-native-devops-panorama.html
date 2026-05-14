@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Native DevOps 全景图</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #eef5fb;
+      --text: #102033;
+      --muted: #56667a;
+      --line: #d6deea;
+      --accent: #0083cb;
+      --accent-soft: #dff2ff;
+      --goal: #0b5cab;
+      --process: #157347;
+      --ai: #7a52cc;
+      --human: #b45f06;
+      --governance: #8f1f46;
+      --shadow: 0 18px 48px rgba(16, 32, 51, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+    }
+
+    .frame {
+      width: 1920px;
+      min-height: 1080px;
+      margin: 0 auto;
+      padding: 44px 52px 40px;
+      background:
+        radial-gradient(circle at top left, rgba(0, 131, 203, 0.08), transparent 28%),
+        radial-gradient(circle at top right, rgba(122, 82, 204, 0.07), transparent 24%),
+        linear-gradient(180deg, #f9fbfe 0%, #f4f7fb 100%);
+    }
+
+    .header {
+      display: grid;
+      grid-template-columns: 1.4fr 0.9fr;
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 26px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 7px 12px;
+      border: 1px solid rgba(0, 131, 203, 0.22);
+      border-radius: 999px;
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      background: rgba(0, 131, 203, 0.06);
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 58px;
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      font-weight: 800;
+    }
+
+    .subtitle {
+      margin-top: 16px;
+      max-width: 980px;
+      font-size: 22px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .summary {
+      padding: 20px 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: var(--shadow);
+    }
+
+    .summary-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      margin-bottom: 10px;
+    }
+
+    .summary p {
+      margin: 0;
+      font-size: 17px;
+      line-height: 1.65;
+      color: var(--text);
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+    }
+
+    .layer {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .layer-head {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      padding: 18px 24px 12px;
+      border-bottom: 1px solid var(--line);
+      background: #fbfcfe;
+    }
+
+    .layer-index {
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.9;
+    }
+
+    .layer-title {
+      font-size: 28px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+
+    .layer-note {
+      margin-left: auto;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .layer.goal .layer-index,
+    .layer.goal .layer-title { color: var(--goal); }
+    .layer.process .layer-index,
+    .layer.process .layer-title { color: var(--process); }
+    .layer.ai .layer-index,
+    .layer.ai .layer-title { color: var(--ai); }
+    .layer.human .layer-index,
+    .layer.human .layer-title { color: var(--human); }
+    .layer.governance .layer-index,
+    .layer.governance .layer-title { color: var(--governance); }
+
+    .chips {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      padding: 18px 22px 22px;
+    }
+
+    .chips.five {
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .chips.eight {
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+    }
+
+    .chip {
+      min-height: 108px;
+      padding: 16px 16px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbfd 100%);
+    }
+
+    .chip strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.2;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .chip p {
+      margin: 0;
+      font-size: 15px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .process-band {
+      padding: 20px 22px 24px;
+    }
+
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .step {
+      position: relative;
+      min-height: 132px;
+      padding: 16px 14px 18px;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #effaf3 0%, #ffffff 100%);
+      border: 1px solid rgba(21, 115, 71, 0.18);
+    }
+
+    .step::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -12px;
+      width: 24px;
+      height: 2px;
+      background: rgba(21, 115, 71, 0.28);
+      transform: translateY(-50%);
+    }
+
+    .step:last-child::after {
+      display: none;
+    }
+
+    .step-index {
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--process);
+      letter-spacing: 0.08em;
+      margin-bottom: 10px;
+    }
+
+    .step strong {
+      display: block;
+      font-size: 22px;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+      color: #0d5c33;
+    }
+
+    .step p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .footer-note {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .note-box {
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .note-box strong {
+      display: block;
+      font-size: 15px;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .note-box p {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    @media (max-width: 1960px) {
+      body {
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .frame {
+        width: auto;
+        min-height: auto;
+        padding: 20px;
+      }
+
+      .header,
+      .footer-note,
+      .chips,
+      .chips.five,
+      .chips.eight,
+      .process-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .step::after {
+        display: none;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .subtitle {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="frame">
+    <section class="header">
+      <div>
+        <div class="eyebrow">AI NATIVE DEVOPS PANORAMA</div>
+        <h1>AI Native DevOps 全景图</h1>
+        <p class="subtitle">
+          用一张图同时回答业务为什么投、流程如何运转、AI 在哪里增强、人工在哪里拍板、治理靠什么兜底。
+        </p>
+      </div>
+      <div class="summary">
+        <div class="summary-title">决策者摘要</div>
+        <p>
+          这不是把若干 AI 工具堆进研发流程，而是把目标、流程、责任与治理统一到同一套可验证闭环中：先形成主流程，再提升 AI 增强深度，最后扩展到高级治理与多 Agent 协作。
+        </p>
+      </div>
+    </section>
+
+    <section class="stack">
+      <article class="layer goal">
+        <div class="layer-head">
+          <div class="layer-index">Layer 1</div>
+          <div class="layer-title">业务目标与组织收益</div>
+          <div class="layer-note">回答“为什么要做”</div>
+        </div>
+        <div class="chips">
+          <div class="chip">
+            <strong>交付效率提升</strong>
+            <p>缩短从需求输入到首个可评审工件、可运行实现和可验证结果的周期。</p>
+          </div>
+          <div class="chip">
+            <strong>一致性增强</strong>
+            <p>降低术语漂移、契约不一致、规范与实现分叉带来的返工。</p>
+          </div>
+          <div class="chip">
+            <strong>风险前置</strong>
+            <p>把歧义、缺陷和安全问题尽量前移到需求、建模和验证阶段。</p>
+          </div>
+          <div class="chip">
+            <strong>治理可追溯</strong>
+            <p>让每次变更都能追溯到规范、验证、发布和责任归属。</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="layer process">
+        <div class="layer-head">
+          <div class="layer-index">Layer 2</div>
+          <div class="layer-title">AI Native DevOps 主流程</div>
+          <div class="layer-note">回答“流程如何运转”</div>
+        </div>
+        <div class="process-band">
+          <div class="process-grid">
+            <div class="step">
+              <div class="step-index">PHASE 1</div>
+              <strong>需求</strong>
+              <p>自然语言转结构化 PRD、验收标准与约束。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 2</div>
+              <strong>设计</strong>
+              <p>形成旅程、原型、状态和交互边界。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 3</div>
+              <strong>建模</strong>
+              <p>识别子域、上下文、聚合与领域规则。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 4</div>
+              <strong>规范</strong>
+              <p>沉淀为 OpenSpec 变更、任务和契约。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 5</div>
+              <strong>实现</strong>
+              <p>按规范与任务生成代码、测试与接口更新。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 6</div>
+              <strong>验证</strong>
+              <p>执行测试、契约校验、安全扫描与审查。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 7</div>
+              <strong>交付</strong>
+              <p>部署、放量、冒烟验证与回滚准备。</p>
+            </div>
+            <div class="step">
+              <div class="step-index">PHASE 8</div>
+              <strong>演进</strong>
+              <p>做影响分析、漂移检测与下一轮变更提案。</p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="layer ai">
+        <div class="layer-head">
+          <div class="layer-index">Layer 3</div>
+          <div class="layer-title">AI 增强方式</div>
+          <div class="layer-note">回答“AI 在哪里增强”</div>
+        </div>
+        <div class="chips">
+          <div class="chip">
+            <strong>草稿生成</strong>
+            <p>PRD、旅程、领域工件、Spec、代码与测试草稿。</p>
+          </div>
+          <div class="chip">
+            <strong>候选方案</strong>
+            <p>子域划分、接口设计、任务拆解与实现路径候选。</p>
+          </div>
+          <div class="chip">
+            <strong>自动校验</strong>
+            <p>测试执行、契约差分、安全检查与一致性比对。</p>
+          </div>
+          <div class="chip">
+            <strong>风险分析</strong>
+            <p>歧义识别、漂移检测、影响分析与回归优先级建议。</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="layer human">
+        <div class="layer-head">
+          <div class="layer-index">Layer 4</div>
+          <div class="layer-title">人工责任点</div>
+          <div class="layer-note">回答“人在哪里拍板”</div>
+        </div>
+        <div class="chips five">
+          <div class="chip">
+            <strong>需求确认</strong>
+            <p>确认范围、优先级、验收标准与数据分类。</p>
+          </div>
+          <div class="chip">
+            <strong>模型确认</strong>
+            <p>确认边界、术语、不变量与关键领域假设。</p>
+          </div>
+          <div class="chip">
+            <strong>规范确认</strong>
+            <p>确认异常场景、契约边界与任务范围。</p>
+          </div>
+          <div class="chip">
+            <strong>上线签署</strong>
+            <p>确认变更风险、门禁结果与发布窗口。</p>
+          </div>
+          <div class="chip">
+            <strong>冲突仲裁</strong>
+            <p>处理跨团队契约、Agent 分歧与修复方向争议。</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="layer governance">
+        <div class="layer-head">
+          <div class="layer-index">Layer 5</div>
+          <div class="layer-title">治理底座</div>
+          <div class="layer-note">回答“靠什么保证不失控”</div>
+        </div>
+        <div class="chips">
+          <div class="chip">
+            <strong>统一事实源</strong>
+            <p>文档、规范与代码围绕同一套仓库工件协同演进。</p>
+          </div>
+          <div class="chip">
+            <strong>自动验证与门禁</strong>
+            <p>把测试、契约、安全与审查结论串成固定关卡。</p>
+          </div>
+          <div class="chip">
+            <strong>安全与合规</strong>
+            <p>把数据分类、权限模型、扫描与审计记录纳入主线。</p>
+          </div>
+          <div class="chip">
+            <strong>指标与反馈闭环</strong>
+            <p>用效率、一致性、风险和运行反馈持续校准流程。</p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="footer-note">
+      <div class="note-box">
+        <strong>管理层视角</strong>
+        <p>把 AI Native DevOps 看成目标牵引的流程升级，而不是单点引入若干 AI 工具。</p>
+      </div>
+      <div class="note-box">
+        <strong>治理视角</strong>
+        <p>先固化主流程与责任边界，再提升 AI 增强深度，最后再扩展多 Agent 协作。</p>
+      </div>
+      <div class="note-box">
+        <strong>使用方式</strong>
+        <p>可直接浏览 HTML，也可在桌面端打开后手工截图，作为文档或汇报材料插图。</p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
