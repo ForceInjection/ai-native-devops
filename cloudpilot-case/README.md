@@ -34,13 +34,15 @@ graph LR
 
 本案例中每个工件都由「主 Agent」或「专用 Subagent + 对应 Skill」产出。下表给出生产者，下方给出可直接重放的 prompt 文本。
 
-| 文件                     | 生产者                                                            | Skill / Subagent                                                                                                             | 输入                    |
-| :----------------------- | :---------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- | :---------------------- |
-| `01-interview-notes.md`  | 主 Agent                                                          | （无 — 人工综合，AI 整理）                                                                                                   | 三方访谈原始记录        |
-| `02-prd.md`              | 主 Agent                                                          | （无 — 模板填充）                                                                                                            | `01-interview-notes.md` |
-| `cloudpilot-mockup.html` | 主 Agent                                                          | （无 — UI 草图 + 静态 JS 状态机）                                                                                            | `02-prd.md` §5 FR       |
-| `03-ddd-modeling.md`     | [`ddd-modeler`](../.qoder/agents/ddd-modeler.md) subagent         | 9 个 `@ddd-*` skills（`domain-driven-design-skills`） | `02-prd.md`             |
-| `04-openspec/**`         | [`openspec-author`](../.qoder/agents/openspec-author.md) subagent | `openspec-assistant`（架构师角色）+ `@ddd-openspec-bridge`                                                                   | `03-ddd-modeling.md`    |
+| 文件                     | 生产者                                                               | Skill / Subagent                                           | 输入                    |
+| :----------------------- | :------------------------------------------------------------------- | :--------------------------------------------------------- | :---------------------- |
+| `01-interview-notes.md`  | 主 Agent                                                             | （无 — 人工综合，AI 整理）                                 | 三方访谈原始记录        |
+| `02-prd.md`              | 主 Agent                                                             | （无 — 模板填充）                                          | `01-interview-notes.md` |
+| `cloudpilot-mockup.html` | 主 Agent                                                             | （无 — UI 草图 + 静态 JS 状态机）                          | `02-prd.md` §5 FR       |
+| `03-ddd-modeling.md`     | [`ddd-modeler`](../.qoder/agents/ddd-modeler.md) subagent \*         | 9 个 `@ddd-*` skills（`domain-driven-design-skills`）      | `02-prd.md`             |
+| `04-openspec/**`         | [`openspec-author`](../.qoder/agents/openspec-author.md) subagent \* | `openspec-assistant`（架构师角色）+ `@ddd-openspec-bridge` | `03-ddd-modeling.md`    |
+
+> \* `.qoder/agents/` 目录不在 git 版本控制中（见 `.gitignore`）。新克隆仓库时，这两个链接不可达；Agent 定义文本可从下方 Prompt P4 / P5 的 prompt 模板重建。
 
 ### Prompt P1 · `01-interview-notes.md`
 

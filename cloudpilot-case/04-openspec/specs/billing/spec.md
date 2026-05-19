@@ -77,10 +77,10 @@ UI SHALL 在用户选择 `(type, spec, days)` 后于 200ms 内返回 `Quote`。
 
 ## Events
 
-| 事件               | 触发条件         | 载荷                                  |
-| :----------------- | :--------------- | :------------------------------------ |
-| `QuoteCalculated`  | UI 调用计价      | type, spec, days, totalPrice          |
-| `CostRecordUpdated`| 已发生/预计变更  | projectId, actual, forecast, updatedAt |
+| 事件                | 触发条件        | 载荷                                   |
+| :------------------ | :-------------- | :------------------------------------- |
+| `QuoteCalculated`   | UI 调用计价     | type, spec, days, totalPrice           |
+| `CostRecordUpdated` | 已发生/预计变更 | projectId, actual, forecast, updatedAt |
 
 ## Pricing Table 配置示例
 

@@ -66,10 +66,10 @@
 
 ## Events
 
-| 事件                         | 触发条件                  | 载荷                                |
-| :--------------------------- | :------------------------ | :---------------------------------- |
-| `ResourceProvisioned`        | Provisioner 成功完成      | requestId, provisionedAt, instanceId |
-| `ProvisioningFailed`         | Provisioner 抛错          | requestId, error, failedAt          |
+| 事件                  | 触发条件             | 载荷                                 |
+| :-------------------- | :------------------- | :----------------------------------- |
+| `ResourceProvisioned` | Provisioner 成功完成 | requestId, provisionedAt, instanceId |
+| `ProvisioningFailed`  | Provisioner 抛错     | requestId, error, failedAt           |
 
 ## Repository
 
