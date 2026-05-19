@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CloudPilot · Mock UI</title>
+<style>
+  :root {
+    --bg: #0f172a;
+    --bg-2: #1e293b;
+    --panel: #ffffff;
+    --panel-2: #f8fafc;
+    --border: #e2e8f0;
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --success: #16a34a;
+    --warning: #f59e0b;
+    --danger: #dc2626;
+    --info: #0ea5e9;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--panel-2);
+    color: var(--text);
+    font-size: 14px;
+    display: flex;
+    min-height: 100vh;
+  }
+  /* Sidebar */
+  .sidebar {
+    width: 220px;
+    background: var(--bg);
+    color: #cbd5e1;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+  .logo {
+    padding: 0 20px 20px;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    border-bottom: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .logo .badge { font-size: 10px; padding: 2px 6px; background: var(--primary); border-radius: 4px; font-weight: 500; }
+  .nav { padding: 20px 0; flex: 1; }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-left: 3px solid transparent;
+  }
+  .nav-item:hover { background: var(--bg-2); color: white; }
+  .nav-item.active { background: var(--bg-2); color: white; border-left-color: var(--primary); }
+  .nav-icon { width: 16px; text-align: center; }
+  .user-card {
+    padding: 12px 20px;
+    border-top: 1px solid #334155;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 12px;
+  }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--primary);
+    display: flex; align-items: center; justify-content: center;
+    color: white; font-weight: 600;
+  }
+  /* Main */
+  .main { flex: 1; display: flex; flex-direction: column; overflow-x: hidden; }
+  .topbar {
+    height: 56px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+  }
+  .topbar h1 { font-size: 16px; font-weight: 600; }
+  .mock-banner {
+    background: #fef3c7;
+    color: #92400e;
+    padding: 8px 24px;
+    font-size: 12px;
+    border-bottom: 1px solid #fcd34d;
+  }
+  .content { flex: 1; padding: 24px; overflow-y: auto; }
+  .view { display: none; }
+  .view.active { display: block; }
+  /* Cards */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .card h2 { font-size: 14px; margin-bottom: 12px; color: var(--text-muted); font-weight: 500; }
+  /* KPI */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px; }
+  .kpi-card { background: var(--panel); padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .kpi-label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+  .kpi-value { font-size: 28px; font-weight: 700; }
+  .kpi-trend { font-size: 12px; margin-top: 6px; }
+  .kpi-trend.up { color: var(--success); }
+  .kpi-trend.down { color: var(--danger); }
+  /* Table */
+  table { width: 100%; border-collapse: collapse; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  th { color: var(--text-muted); font-weight: 500; background: var(--panel-2); font-size: 12px; text-transform: uppercase; }
+  tr:hover td { background: #f1f5f9; }
+  /* Status badge */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+  .badge.PENDING { background: #fef3c7; color: #92400e; }
+  .badge.APPROVED { background: #dbeafe; color: #1e40af; }
+  .badge.REJECTED { background: #fee2e2; color: #991b1b; }
+  .badge.PROVISIONED { background: #dcfce7; color: #166534; }
+  .badge.RELEASED { background: #f3f4f6; color: #4b5563; }
+  /* Buttons */
+  .btn {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    background: var(--panel);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: all 0.15s;
+    color: var(--text);
+  }
+  .btn:hover { background: var(--panel-2); }
+  .btn-primary { background: var(--primary); color: white; border-color: var(--primary); }
+  .btn-primary:hover { background: var(--primary-hover); }
+  .btn-success { background: var(--success); color: white; border-color: var(--success); }
+  .btn-danger { background: var(--danger); color: white; border-color: var(--danger); }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  /* Form */
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; margin-bottom: 6px; font-weight: 500; font-size: 13px; }
+  .form-group input, .form-group select, .form-group textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .quote-panel {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    padding: 16px;
+    border-radius: var(--radius);
+    border: 1px solid #bfdbfe;
+  }
+  .quote-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 13px; }
+  .quote-row.total { border-top: 1px dashed #93c5fd; margin-top: 8px; padding-top: 8px; font-weight: 600; font-size: 16px; }
+  /* Bar chart */
+  .chart { display: flex; align-items: flex-end; gap: 12px; height: 200px; padding: 16px 0; }
+  .bar { flex: 1; background: linear-gradient(180deg, var(--primary) 0%, #60a5fa 100%); border-radius: 4px 4px 0 0; position: relative; min-height: 8px; }
+  .bar-label { position: absolute; bottom: -22px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--text-muted); }
+  .bar-value { position: absolute; top: -20px; left: 0; right: 0; text-align: center; font-size: 11px; font-weight: 600; }
+  /* Toast */
+  .toast {
+    position: fixed;
+    top: 80px;
+    right: 24px;
+    background: var(--text);
+    color: white;
+    padding: 12px 16px;
+    border-radius: 6px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    font-size: 13px;
+    z-index: 1000;
+    animation: slideIn 0.3s;
+  }
+  @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .toast.success { background: var(--success); }
+  .toast.error { background: var(--danger); }
+  /* Empty */
+  .empty { text-align: center; padding: 40px; color: var(--text-muted); }
+  /* Responsive */
+  @media (max-width: 900px) {
+    .sidebar { width: 60px; }
+    .nav-item span:not(.nav-icon) { display: none; }
+    .logo span:not(.badge) { display: none; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="logo">
+      ☁️ <span>CloudPilot</span> <span class="badge">MOCK</span>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" data-view="dashboard"><span class="nav-icon">📊</span><span>仪表盘</span></div>
+      <div class="nav-item" data-view="apply"><span class="nav-icon">➕</span><span>新建申请</span></div>
+      <div class="nav-item" data-view="my-requests"><span class="nav-icon">📋</span><span>我的申请</span></div>
+      <div class="nav-item" data-view="approvals"><span class="nav-icon">✅</span><span>审批中心</span></div>
+      <div class="nav-item" data-view="cost"><span class="nav-icon">💰</span><span>成本中心</span></div>
+    </nav>
+    <div class="user-card">
+      <div class="avatar">Z</div>
+      <div>
+        <div style="color: white; font-weight: 500;">zhangsan</div>
+        <div style="color: var(--text-muted);">研发部 / 审批人</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h1 id="page-title">仪表盘</h1>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button class="btn btn-sm" onclick="resetMock()">🔄 重置 Mock 数据</button>
+      </div>
+    </div>
+    <div class="mock-banner">
+      ⚠️ 这是一个 Mock 演示界面：所有云资源、计费、状态转换均为模拟数据，无任何真实云调用。状态会按时间自动推进（PENDING → APPROVED → PROVISIONED）。
+    </div>
+    <div class="content">
+
+      <!-- Dashboard -->
+      <div class="view active" id="view-dashboard">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-label">运行中资源</div>
+            <div class="kpi-value" id="kpi-running">0</div>
+            <div class="kpi-trend up">↑ 较昨日</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">本月费用</div>
+            <div class="kpi-value" id="kpi-cost">¥0</div>
+            <div class="kpi-trend down">↓ 节省 12%</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">待审批</div>
+            <div class="kpi-value" id="kpi-pending">0</div>
+            <div class="kpi-trend">需关注</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">平均交付时间</div>
+            <div class="kpi-value">23 <span style="font-size:14px;color:var(--text-muted);">分钟</span></div>
+            <div class="kpi-trend up">↓ 从 3 天</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>最近申请</h2>
+          <table>
+            <thead>
+              <tr><th>申请号</th><th>类型</th><th>规格</th><th>状态</th><th>时间</th></tr>
+            </thead>
+            <tbody id="recent-list"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h2>最近 7 日成本趋势 (¥)</h2>
+          <div class="chart" id="cost-chart"></div>
+        </div>
+      </div>
+
+      <!-- Apply -->
+      <div class="view" id="view-apply">
+        <div class="card">
+          <h2>新建资源申请</h2>
+          <form id="apply-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label>资源类型</label>
+                <select id="f-type" required>
+                  <option value="ECS">ECS · 云主机</option>
+                  <option value="RDS">RDS · 关系数据库</option>
+                  <option value="OSS">OSS · 对象存储</option>
+                  <option value="Redis">Redis · 缓存</option>
+                  <option value="SLB">SLB · 负载均衡</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>规格</label>
+                <select id="f-spec" required>
+                  <option value="2c4g">2 核 4G</option>
+                  <option value="4c8g" selected>4 核 8G</option>
+                  <option value="8c16g">8 核 16G</option>
+                  <option value="16c32g">16 核 32G</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>使用时长（天）</label>
+                <input type="number" id="f-days" value="30" min="1" max="365" required />
+              </div>
+              <div class="form-group">
+                <label>项目</label>
+                <input type="text" id="f-project" value="cloudpilot-demo" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>用途说明</label>
+              <textarea id="f-purpose" rows="3" placeholder="例如：开发测试环境..."></textarea>
+            </div>
+
+            <div class="quote-panel" id="quote">
+              <div class="quote-row"><span>资源类型</span><span id="q-type">ECS</span></div>
+              <div class="quote-row"><span>规格</span><span id="q-spec">4c8g</span></div>
+              <div class="quote-row"><span>单价（含税）</span><span id="q-unit">¥0/天</span></div>
+              <div class="quote-row"><span>时长</span><span id="q-days">30 天</span></div>
+              <div class="quote-row total"><span>预估总价</span><span id="q-total">¥0</span></div>
+            </div>
+
+            <div style="margin-top: 16px; display: flex; gap: 8px;">
+              <button type="submit" class="btn btn-primary">提交申请</button>
+              <button type="reset" class="btn">重置</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- My Requests -->
+      <div class="view" id="view-my-requests">
+        <div class="card">
+          <h2>我的申请</h2>
+          <table>
+            <thead>
+              <tr><th>申请号</th><th>类型</th><th>规格</th><th>项目</th><th>状态</th><th>预估费用</th><th>提交时间</th><th>操作</th></tr>
+            </thead>
+            <tbody id="my-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Approvals -->
+      <div class="view" id="view-approvals">
+        <div class="card">
+          <h2>待审批 (PENDING)</h2>
+          <table>
+            <thead>
+              <tr><th>申请号</th><th>申请人</th><th>类型</th><th>规格</th><th>项目</th><th>预估费用</th><th>操作</th></tr>
+            </thead>
+            <tbody id="pending-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Cost -->
+      <div class="view" id="view-cost">
+        <div class="card">
+          <h2>项目维度费用（本月）</h2>
+          <table>
+            <thead>
+              <tr><th>项目</th><th>资源数</th><th>已发生费用</th><th>预计本月</th></tr>
+            </thead>
+            <tbody id="cost-list"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+// ====== Mock Pricing Table ======
+const PRICING = {
+  ECS: { '2c4g': 8, '4c8g': 16, '8c16g': 32, '16c32g': 64 },
+  RDS: { '2c4g': 25, '4c8g': 50, '8c16g': 100, '16c32g': 200 },
+  OSS: { '2c4g': 2, '4c8g': 4, '8c16g': 8, '16c32g': 16 },
+  Redis: { '2c4g': 12, '4c8g': 24, '8c16g': 48, '16c32g': 96 },
+  SLB: { '2c4g': 5, '4c8g': 10, '8c16g': 20, '16c32g': 40 },
+};
+
+// ====== State (localStorage) ======
+const STORAGE_KEY = 'cloudpilot.requests.v1';
+function loadState() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
+  catch { return []; }
+}
+function saveState(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+
+// Seed with sample data on first load
+if (!localStorage.getItem(STORAGE_KEY)) {
+  const now = Date.now();
+  saveState([
+    { id: 'req-001', type: 'ECS', spec: '4c8g', days: 30, project: 'order-service', applicant: 'lisi', status: 'PROVISIONED', cost: 480, createdAt: now - 2*3600*1000, approvedAt: now - 7000*1000, provisionedAt: now - 6000*1000 },
+    { id: 'req-002', type: 'RDS', spec: '4c8g', days: 30, project: 'order-service', applicant: 'wangwu', status: 'PENDING', cost: 1500, createdAt: now - 30*60*1000 },
+    { id: 'req-003', type: 'OSS', spec: '8c16g', days: 60, project: 'data-platform', applicant: 'zhangsan', status: 'APPROVED', cost: 480, createdAt: now - 5*60*1000, approvedAt: now - 60*1000 },
+    { id: 'req-004', type: 'Redis', spec: '2c4g', days: 7, project: 'cloudpilot-demo', applicant: 'zhangsan', status: 'REJECTED', cost: 84, createdAt: now - 24*3600*1000, rejectedReason: '规格过低' },
+    { id: 'req-005', type: 'ECS', spec: '8c16g', days: 90, project: 'data-platform', applicant: 'zhaoliu', status: 'PROVISIONED', cost: 2880, createdAt: now - 5*24*3600*1000, approvedAt: now - 5*24*3600*1000 + 600*1000, provisionedAt: now - 5*24*3600*1000 + 1800*1000 },
+  ]);
+}
+
+// ====== Routing ======
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const view = item.dataset.view;
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    item.classList.add('active');
+    document.getElementById('view-' + view).classList.add('active');
+    document.getElementById('page-title').textContent = item.querySelector('span:last-child').textContent;
+    render();
+  });
+});
+
+// ====== Quote update ======
+function updateQuote() {
+  const type = document.getElementById('f-type').value;
+  const spec = document.getElementById('f-spec').value;
+  const days = parseInt(document.getElementById('f-days').value) || 0;
+  const unit = PRICING[type][spec] || 0;
+  document.getElementById('q-type').textContent = type;
+  document.getElementById('q-spec').textContent = spec;
+  document.getElementById('q-unit').textContent = `¥${unit}/天`;
+  document.getElementById('q-days').textContent = `${days} 天`;
+  document.getElementById('q-total').textContent = `¥${unit * days}`;
+}
+['f-type','f-spec','f-days'].forEach(id => {
+  document.getElementById(id).addEventListener('input', updateQuote);
+  document.getElementById(id).addEventListener('change', updateQuote);
+});
+updateQuote();
+
+// ====== Submit application ======
+document.getElementById('apply-form').addEventListener('submit', e => {
+  e.preventDefault();
+  const type = document.getElementById('f-type').value;
+  const spec = document.getElementById('f-spec').value;
+  const days = parseInt(document.getElementById('f-days').value);
+  const project = document.getElementById('f-project').value;
+  const cost = PRICING[type][spec] * days;
+  const list = loadState();
+  const newId = 'req-' + String(list.length + 1).padStart(3, '0');
+  list.push({
+    id: newId, type, spec, days, project,
+    applicant: 'zhangsan',
+    status: 'PENDING',
+    cost,
+    createdAt: Date.now(),
+  });
+  saveState(list);
+  toast(`申请 ${newId} 已提交，等待审批`, 'success');
+  document.getElementById('apply-form').reset();
+  updateQuote();
+  render();
+});
+
+// ====== Approve / Reject ======
+function approve(id) {
+  const list = loadState();
+  const r = list.find(x => x.id === id);
+  if (!r) return;
+  r.status = 'APPROVED';
+  r.approvedAt = Date.now();
+  saveState(list);
+  toast(`已批准 ${id}，30 分钟内自动配置`, 'success');
+  render();
+}
+function reject(id) {
+  const reason = prompt('驳回原因：');
+  if (!reason) return;
+  const list = loadState();
+  const r = list.find(x => x.id === id);
+  if (!r) return;
+  r.status = 'REJECTED';
+  r.rejectedReason = reason;
+  saveState(list);
+  toast(`已驳回 ${id}`, 'error');
+  render();
+}
+function release(id) {
+  if (!confirm('确认释放该资源？')) return;
+  const list = loadState();
+  const r = list.find(x => x.id === id);
+  if (!r) return;
+  r.status = 'RELEASED';
+  r.releasedAt = Date.now();
+  saveState(list);
+  toast(`已释放 ${id}`, 'success');
+  render();
+}
+
+// ====== Mock provisioner: APPROVED -> PROVISIONED after delay ======
+function tickProvisioner() {
+  const list = loadState();
+  let changed = false;
+  const now = Date.now();
+  list.forEach(r => {
+    if (r.status === 'APPROVED' && r.approvedAt) {
+      // mock: 30s in real time = 30min in mock
+      const elapsed = now - r.approvedAt;
+      if (elapsed > 30 * 1000) {
+        r.status = 'PROVISIONED';
+        r.provisionedAt = now;
+        changed = true;
+      }
+    }
+  });
+  if (changed) {
+    saveState(list);
+    render();
+  }
+}
+setInterval(tickProvisioner, 5000);
+
+// ====== Toast ======
+function toast(msg, type = '') {
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2500);
+}
+
+// ====== Reset ======
+function resetMock() {
+  if (!confirm('重置所有 mock 数据？')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ====== Render ======
+function fmtTime(ts) {
+  if (!ts) return '-';
+  const diff = Date.now() - ts;
+  if (diff < 60000) return Math.floor(diff/1000) + ' 秒前';
+  if (diff < 3600000) return Math.floor(diff/60000) + ' 分钟前';
+  if (diff < 86400000) return Math.floor(diff/3600000) + ' 小时前';
+  return Math.floor(diff/86400000) + ' 天前';
+}
+function badge(s) { return `<span class="badge ${s}">${s}</span>`; }
+
+function render() {
+  const list = loadState();
+
+  // Dashboard
+  const running = list.filter(r => r.status === 'PROVISIONED').length;
+  const monthCost = list.filter(r => ['PROVISIONED','APPROVED'].includes(r.status))
+    .reduce((s, r) => s + (r.cost || 0), 0);
+  const pending = list.filter(r => r.status === 'PENDING').length;
+  document.getElementById('kpi-running').textContent = running;
+  document.getElementById('kpi-cost').textContent = '¥' + monthCost.toLocaleString();
+  document.getElementById('kpi-pending').textContent = pending;
+
+  document.getElementById('recent-list').innerHTML = list.slice(-5).reverse().map(r => `
+    <tr>
+      <td><b>${r.id}</b></td>
+      <td>${r.type}</td>
+      <td>${r.spec}</td>
+      <td>${badge(r.status)}</td>
+      <td>${fmtTime(r.createdAt)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="5" class="empty">暂无数据</td></tr>';
+
+  // Cost chart - last 7 days simulated
+  const days = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+  const data = [320, 480, 560, 410, 720, 650, 890];
+  const max = Math.max(...data);
+  document.getElementById('cost-chart').innerHTML = data.map((v, i) => `
+    <div class="bar" style="height: ${v/max*100}%">
+      <div class="bar-value">¥${v}</div>
+      <div class="bar-label">${days[i]}</div>
+    </div>
+  `).join('');
+
+  // My requests
+  document.getElementById('my-list').innerHTML = list.filter(r => r.applicant === 'zhangsan').reverse().map(r => `
+    <tr>
+      <td><b>${r.id}</b></td>
+      <td>${r.type}</td>
+      <td>${r.spec}</td>
+      <td>${r.project}</td>
+      <td>${badge(r.status)}</td>
+      <td>¥${r.cost}</td>
+      <td>${fmtTime(r.createdAt)}</td>
+      <td>${r.status === 'PROVISIONED' ? `<button class="btn btn-sm btn-danger" onclick="release('${r.id}')">释放</button>` : '-'}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="8" class="empty">暂无申请</td></tr>';
+
+  // Approvals
+  document.getElementById('pending-list').innerHTML = list.filter(r => r.status === 'PENDING').map(r => `
+    <tr>
+      <td><b>${r.id}</b></td>
+      <td>${r.applicant}</td>
+      <td>${r.type}</td>
+      <td>${r.spec}</td>
+      <td>${r.project}</td>
+      <td>¥${r.cost}</td>
+      <td>
+        <button class="btn btn-sm btn-success" onclick="approve('${r.id}')">批准</button>
+        <button class="btn btn-sm btn-danger" onclick="reject('${r.id}')">驳回</button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" class="empty">暂无待审批</td></tr>';
+
+  // Cost
+  const projects = {};
+  list.forEach(r => {
+    if (!['PROVISIONED','APPROVED'].includes(r.status)) return;
+    if (!projects[r.project]) projects[r.project] = { count: 0, cost: 0 };
+    projects[r.project].count++;
+    projects[r.project].cost += r.cost;
+  });
+  document.getElementById('cost-list').innerHTML = Object.entries(projects).map(([p, v]) => `
+    <tr>
+      <td><b>${p}</b></td>
+      <td>${v.count}</td>
+      <td>¥${v.cost.toLocaleString()}</td>
+      <td>¥${(v.cost * 1.05).toFixed(0)}</td>
+    </tr>
+  `).join('') || '<tr><td colspan="4" class="empty">暂无费用记录</td></tr>';
+}
+
+render();
+</script>
+</body>
+</html>
