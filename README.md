@@ -34,8 +34,8 @@
 
 本节列出文中“当前已有能力”判断所参考的公开项目，相关表述以对应仓库公开文档、目录结构与说明信息为依据。
 
-- [domain-driven-design-skills](https://github.com/domain-driven-design-skills)：公开提供一组面向领域驱动设计的 Skill，覆盖战略建模、战术建模与 OpenSpec 桥接。
-- [OpenSpec-practise](https://github.com/OpenSpec-practise)：公开展示规范驱动开发工作流，以及 `proposal.md`、`design.md`、`tasks.md`、`specs/` 与 `/opsx:*` 指令体系。
+- [domain-driven-design-skills](https://github.com/ForceInjection/domain-driven-design-skills)：公开提供一组面向领域驱动设计的 Skill，覆盖战略建模、战术建模与 OpenSpec 桥接。
+- [OpenSpec-practise](https://github.com/ForceInjection/OpenSpec-practise)：公开展示规范驱动开发工作流，以及 `proposal.md`、`design.md`、`tasks.md`、`specs/` 与 `/opsx:*` 指令体系。
 
 ---
 
