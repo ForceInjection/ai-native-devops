@@ -1,0 +1,62 @@
+schema: spec-driven
+
+context: |
+  CloudPilot 云管平台 MVP — AI Native DevOps 8 阶段框架的端到端案例。
+  从三方访谈到 Spec 定义，再到代码桥接，全链路 AI 辅助。
+
+  业务域：私有云资源自助管理（ECS/RDS/OSS/Redis/SLB 的申请、审批、配置、回收）。
+  核心聚合：ResourceRequest（5 状态机）、ResourceInstance、PricingTable、ProjectCost、AuditEvent。
+  限界上下文：ResourceRequestContext (Core)、ProvisioningContext (Supporting)、BillingContext (Supporting)、AuditContext (Generic)、IdentityContext (Generic)。
+
+  方法论文档：ai-native-devops/ai-native-devops.md（8 阶段框架定义）。
+  案例入口：cloudpilot-case/README.md（工件追溯 + 可重放 Prompt）。
+  领域建模：cloudpilot-case/03-ddd-modeling.md（9 个 @ddd-* Skill 产出，8 个 IV-N 不变量）。
+  OpenSpec 规范：cloudpilot-case/04-openspec/（proposal + design + tasks + 3 spec）。
+  代码桥接：cloudpilot-case/05-p5-code-bridge.md（Spec→代码映射，Mock→Real 切换点）。
+
+rules:
+  proposal:
+    - §Why 必须包含可度量目标表（当前值 → 目标值）
+    - §What Changes 按 capability（对应限界上下文）列出
+    - §Impact 覆盖依赖、数据迁移、回滚、风险、安全五个维度
+    - §Non-Goals 显式列出不在范围内的内容
+
+  specs:
+    - 使用 `### Requirement: <描述> (IV-N)` 作为每个需求的标题，引用 DDD 模型中的不变量编号
+    - 每个 Requirement 至少包含一个 `#### Scenario:` 块
+    - Scenario 使用 GIVEN/WHEN/THEN 结构，THEN 支持 AND 子句
+    - 规范性语言使用 SHALL/MUST，禁止使用 SHOULD/MAY（避免模糊）
+    - 每个 spec 文件包含 `## Events`（领域事件表）和 `## Repository`（接口定义）章节
+    - 不新增 DDD 模型未提及的概念；如有缺口，先回溯到 ddd-modeler
+
+  design:
+    - §架构概览 必须包含 Mermaid graph TB，展示限界上下文及其集成关系
+    - §集成与契约 用表格列出来源→目标→模式→契约
+    - §关键决策 每一项包含 问题/决策/权衡 三列，编号 D1..Dn
+    - §状态机 使用文本箭头图（PENDING→APPROVED→...）清晰标注所有合法转换路径
+    - §安全与权限 按角色列出数据隔离边界
+    - §可观测性 列出关键指标及告警阈值
+
+  tasks:
+    - 按阶段拆分（Stage 1 脚手架 → Stage 2..N 按上下文 → 横切关注点 → 灰度上线）
+    - 每项使用 `- [ ]` checkbox 格式
+    - 涉及 spec 的阶段标注 `> 对应 spec：` 引用
+    - 按依赖关系排序，被依赖的任务排在前面
+
+  frontmatter:
+    - 所有生成的 markdown 文件必须包含 frontmatter 块：
+      ```
+      阶段: <P1-P8 phase name>
+      上游输入: <source artifact file>
+      下游消费: <next phase artifact>
+      责任人: <human owner role>
+      AI 草稿置信度: <percentage>
+      ```
+    - 置信度标注：高（>90% 结构化字段已对齐）、中（70-90% 需人工补充）、低（<70% 仅作为讨论起点）
+
+  naming:
+    - capability/context 名称使用 kebab-case（如 resource-request）
+    - DDD 聚合不变量使用 IV-N 编号（IV-1, IV-2, ...），稳定递增
+    - 状态枚举值使用 UPPER_SNAKE_CASE（PENDING, APPROVED, PROVISIONED, RELEASED, REJECTED）
+    - 领域事件使用 PastTenseVerb 命名（ResourceRequested, RequestApproved, ResourceProvisioned）
+    - 仓库接口命名为 <Aggregate>Repository，领域服务命名为 <Action>er（Provisioner, QuoteCalculator）

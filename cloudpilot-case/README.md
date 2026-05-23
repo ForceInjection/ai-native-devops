@@ -13,6 +13,7 @@
 | 5    | [`04-openspec/`](./04-openspec/)                     | P4 OpenSpec 规范定义       | proposal / design / tasks / 3 个 spec      |
 | 6    | [`05-p5-code-bridge.md`](./05-p5-code-bridge.md)     | P5 Spec→代码桥接           | 项目结构、Spec→代码映射表、契约包设计、Mock→Real 切换 |
 | 🎤   | [`cloudpilot-demo-nav.html`](./cloudpilot-demo-nav.html) | Demo 演示导航台       | 交互式阶段时间线 + 人机协同流程图 + 工件预览弹窗（演示者投影使用） |
+| ⚙    | [`config.yaml`](./config.yaml)                         | AI 上下文注入配置       | schema、context、rules（proposal/specs/design/tasks/frontmatter/naming） |
 
 ## 链路一览
 
@@ -148,6 +149,8 @@ graph LR
 ## P5-P8 下一步
 
 CloudPilot 案例演示了 AI Native DevOps 的前半段（P1 需求 → P4 Spec 定义）。
+
+**AI 上下文注入**：[`config.yaml`](./config.yaml) 定义了 AI 在 CloudPilot 项目中的行为规范——schema、context、proposal/specs/design/tasks 规则、frontmatter 格式、命名约定。将本文件注入 AI 的 system prompt 即可让 AI 按 CloudPilot 方法论工作。
 
 **P5 代码桥接**：[`05-p5-code-bridge.md`](./05-p5-code-bridge.md) 是本仓库内的参考文档，定义 Spec → 代码的映射规则、monorepo 项目结构、契约包设计、Mock→Real Provisioner 切换点。在 `/cloudpilot-demo` 的 Phase 6 中，AI 会基于 DDD 模型实时推导一份 `05-code-structure.md`，与该参考架构对比。
 
