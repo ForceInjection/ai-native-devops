@@ -43,6 +43,7 @@ graph LR
 | `cloudpilot-mockup.html` | 主 Agent                                                             | （无 — UI 草图 + 静态 JS 状态机）                          | `02-prd.md` §5 FR       |
 | `03-ddd-modeling.md`     | [`ddd-modeler`](../.qoder/agents/ddd-modeler.md) subagent \*         | 9 个 `@ddd-*` skills（`domain-driven-design-skills`）      | `02-prd.md`             |
 | `04-openspec/**`         | [`openspec-author`](../.qoder/agents/openspec-author.md) subagent \* | `openspec-assistant`（架构师角色）+ `@ddd-openspec-bridge` | `03-ddd-modeling.md`    |
+| `05-p5-code-bridge.md`   | 架构师（预定义参考）                                                 | （无 — Spec→代码映射规则，作为 `/cloudpilot-demo` Phase 6 的对比基线） | `04-openspec/`          |
 
 > \* `.qoder/agents/` 目录不在 git 版本控制中（见 `.gitignore`）。新克隆仓库时，这两个链接不可达；Agent 定义文本可从下方 Prompt P4 / P5 的 prompt 模板重建。
 
@@ -129,6 +130,9 @@ graph LR
 
 ### 重放方式
 
+**一键 Demo**：在 claude-code 中输入 `/cloudpilot-demo`，按提示逐步执行即可（需要先配置 DDD Skill 软链接，见 CLAUDE.md）。
+
+**手动重放**：
 ```bash
 # 1) 重新生成 DDD 模型（覆盖 03-ddd-modeling.md）
 #    在 Qoder 中：调用 ddd-modeler subagent，传入 ./02-prd.md
@@ -142,6 +146,10 @@ graph LR
 
 ## P5-P8 下一步
 
-CloudPilot 案例演示了 AI Native DevOps 的前半段（P1 需求 → P4 Spec 定义）。**规范如何驱动代码实现、测试与部署**（P5 实现 → P6 测试 → P7 验证 → P8 演进），可参考同作者的另一个案例：
+CloudPilot 案例演示了 AI Native DevOps 的前半段（P1 需求 → P4 Spec 定义）。
+
+**P5 代码桥接**：[`05-p5-code-bridge.md`](./05-p5-code-bridge.md) 是本仓库内的参考文档，定义 Spec → 代码的映射规则、monorepo 项目结构、契约包设计、Mock→Real Provisioner 切换点。在 `/cloudpilot-demo` 的 Phase 6 中，AI 会基于 DDD 模型实时推导一份 `05-code-structure.md`，与该参考架构对比。
+
+**P5-P7 可运行实现**：规范如何驱动代码实现、测试与部署（P5 实现 → P6 测试 → P7 验证 → P8 演进），可参考同作者的另一个案例：
 
 > **[ForceInjection/OpenSpec-practise](https://github.com/ForceInjection/OpenSpec-practise)** — 电商领域，同一套 `proposal/design/tasks/specs` 结构驱动 Node.js 和 Python 两种实现。包含完整测试覆盖、archive 工作流、`config.yaml` AI 上下文注入。
