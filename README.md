@@ -90,12 +90,12 @@ Skill 的深入解读（What / When / How + Claude Code 与 QoderWork 内置 Ski
 
 CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Coding 为日常工作模式，走通 DevOps 前 4 阶段（从三方访谈到 OpenSpec 规范）。若推进到 P5 实现阶段，可按 Architecture 三层模型落地：报价走 Tool（确定性计算）、审批走 Skill（固定 SOP）、智能推荐走 Agent（需经验沉淀）。
 
-全链路仅需 5 个工件层（访谈记录 → PRD → Mock UI → DDD 模型 → OpenSpec），所有 Prompt 已记录，可由 `ddd-modeler` 和 `openspec-author` 两个 subagent 端到端重放。
+全链路仅需 6 个工件层（访谈记录 → PRD → Mock UI → DDD 模型 → OpenSpec → 代码桥接），所有 Prompt 已记录，可由 `ddd-modeler` 和 `openspec-author` 两个 subagent 端到端重放。
 
 | 文件                                                       | 说明                                                                                                     |
 | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
 | [`cloudpilot-case/README.md`](./cloudpilot-case/README.md) | 案例总览、工件追溯表、全部可重放 Prompt                                                                  |
-| `cloudpilot-case/` 下各工件                                | `01-interview-notes.md` → `02-prd.md` → `cloudpilot-mockup.html` → `03-ddd-modeling.md` → `04-openspec/` |
+| `cloudpilot-case/` 下各工件                                | `01-interview-notes.md` → `02-prd.md` → `cloudpilot-mockup.html` → `03-ddd-modeling.md` → `04-openspec/` → `05-p5-code-bridge.md` |
 
 ---
 
@@ -109,6 +109,7 @@ CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Codi
 | **开发与 Tech Lead** | `ai-native-devops/ai-native-devops.md` §4.5, §4.6, §6.1, §7.4, §7.7, §12 + `cloudpilot-case/`                                            |
 | **平台 / SRE 与 QA** | `ai-native-devops/ai-native-devops.md` §4.6, §4.7, §7.5, §7.8, §9, §11.3                                                                 |
 | **想深入理解 Skill 的开发者** | [`skill-deep-dive-for-traditional-dev.md`](./skill-deep-dive-for-traditional-dev.md) — Skill 的 What / When / How + 常见内置 Skill 清单   |
+| **Demo 演示者** | `.claude/skills/cloudpilot-demo/` — `/cloudpilot-demo` 一键重放 + 演示者手册（讲解要点、常见 Q&A） |
 
 ---
 

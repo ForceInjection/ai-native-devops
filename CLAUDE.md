@@ -50,7 +50,7 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
     └── 05-p5-code-bridge.md              (P5: spec→code mapping, contract design, Mock→Real switch)
 ```
 
-Root-level `.pptx` files (`从 Vibe Coding 到 AI Native.pptx`, `ai-native-devops/AI Native DevOps：人机协同的工程变革框架.pptx`) are presentation slide decks derived from the articles; they are not source-of-truth documents. The root-level one is currently untracked.
+Root-level `.pptx` files (`从 Vibe Coding 到 AI Native.pptx`, `ai-native-devops/AI Native DevOps：人机协同的工程变革框架.pptx`) are presentation slide decks derived from the articles; they are not source-of-truth documents. Both are gitignored by the `*.pptx` pattern.
 
 ## Local configuration
 
@@ -67,6 +67,7 @@ When recommending what to read, use these starting points (aligned with README.m
 | **Architect** | `ai-native-devops/ai-native-devops.md` §4.3, §4.4, §7.2, §7.3, §7.8, §7.9 + `ai-native-architecture/ai-native-architecture.md` (full) |
 | **Developer / Tech Lead** | `ai-native-devops/ai-native-devops.md` §4.5, §4.6, §6.1, §7.4, §7.7, §12 + `cloudpilot-case/` |
 | **Platform / SRE / QA** | `ai-native-devops/ai-native-devops.md` §4.6, §4.7, §7.5, §7.8, §9, §11.3 |
+| **Demo 演示者** | `.claude/skills/cloudpilot-demo/references/presenter-guide.md` — 10 分钟节奏、讲解要点、常见 Q&A |
 
 ## Companion repositories
 
@@ -92,11 +93,13 @@ Both agents reference skills from [domain-driven-design-skills](https://github.c
 
 `.claude/skills/cloudpilot-demo/SKILL.md` defines a `/cloudpilot-demo` slash command that replays the full CloudPilot workflow end-to-end:
 
-- Auto-detects current progress by checking which output files exist
-- Executes P1-pre → P1 → P2 → P3 → P4 sequentially, pausing for human confirmation at each stage
-- P3 invokes the 9 DDD skills (symlinked from `.claude/skills/ddd-*`) in order with a quality gate at step 8
-- P4 enforces IV-N → Scenario coverage
-- Supports "跳过"/"重做"/"从头开始"/"到 P3" shortcuts
+- Auto-detects current progress by checking which output files exist; supports `$OUT` directory switching via `输出到 <path>`
+- Executes P1-pre → P1 → P2 → P3 → P4 → P5 sequentially, pausing for human confirmation at each stage
+- P3 invokes 9 DDD skills (symlinked from `.claude/skills/ddd-*`) with quality gate at step 8; `快速 P3` skips per-skill display
+- P4 generates `04-openspec/` with IV-N → Scenario coverage enforcement; `快速 P4` uses `openspec-assistant` skill's `/opsx:propose`
+- P5 (Phase 6) generates `05-code-structure.md` — AI derives code structure from DDD model + specs in real-time, then `对比P5` compares against the pre-defined reference `cloudpilot-case/05-p5-code-bridge.md`
+- `对比` compares all P1-P4 outputs against `cloudpilot-case/` originals
+- A presenter guide with talking points and common Q&A lives at `references/presenter-guide.md`
 
 `.claude/skills/` is gitignored. The DDD skills come from the open-source repo [ForceInjection/domain-driven-design-skills](https://github.com/ForceInjection/domain-driven-design-skills). On a new machine:
 ```bash
