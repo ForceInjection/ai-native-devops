@@ -33,7 +33,7 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
 │   ├── ai-native-architecture-diagram.html (interactive pyramid: clickable Agent/Skill/Tool layers)
 │   └── ai-native-architecture-diagram-article.md  (design rationale behind the diagram)
 └── cloudpilot-case/                       ← Full 8-phase walkthrough (CloudPilot MVP)
-    ├── README.md                          (index + reproducible prompts for all 5 phases)
+    ├── README.md                          (index + reproducible prompts for all 6 phases)
     ├── 01-interview-notes.md              (P1-preq: business interview synthesis)
     ├── 02-prd.md                          (P1: structured PRD)
     ├── cloudpilot-mockup.html             (P2: interactive mock UI, 5 views, localStorage)
@@ -48,7 +48,7 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
     │       ├── resource-management/spec.md
     │       └── resource-request/spec.md   (resource-request requirements + scenarios)
     ├── 05-p5-code-bridge.md              (P5: spec→code mapping, contract design, Mock→Real switch)
-    └── cloudpilot-demo-nav.html          (interactive demo console: phaes timeline + flow diagram + artifact preview modals)
+    └── cloudpilot-demo-nav.html          (interactive demo console: phases timeline + flow diagram + artifact preview modals)
 ```
 
 Root-level `.pptx` files (`从 Vibe Coding 到 AI Native.pptx`, `ai-native-devops/AI Native DevOps：人机协同的工程变革框架.pptx`) are presentation slide decks derived from the articles; they are not source-of-truth documents. Both are gitignored by the `*.pptx` pattern.
