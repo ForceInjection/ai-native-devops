@@ -311,7 +311,7 @@ var phases = [
 
 var currentMain = 2, currentSub = -1, modalTab = 0;
 
-function currentPhase() {
+function getCurrentPhase() {
   if (currentMain === 3 && currentSub >= 0) return phases[3].subPhases[currentSub];
   return phases[currentMain];
 }
@@ -364,7 +364,7 @@ function renderTimeline() {
 }
 
 function renderDetail() {
-  var p = currentPhase();
+  var p = getCurrentPhase();
   document.getElementById('detailTitle').textContent = p.num + ' · ' + p.title;
 
   var html = '';
@@ -438,7 +438,7 @@ function flowNode(cls, icon, label, role, action, onclick, btnLabel) {
 function updateSummary() {
   var totalMain = phases.length - 1;
   document.getElementById('doneCount').textContent = currentMain;
-  var cp = currentPhase();
+  var cp = getCurrentPhase();
   document.getElementById('currentPhase').textContent = cp.num;
   document.getElementById('remainingCount').textContent = totalMain - currentMain;
 }
@@ -502,17 +502,17 @@ function renderModalBody(artifactKey) {
     document.getElementById('modalBody').innerHTML = '<div class="artifact-preview">'+(artifacts_preview[artifactKey] || '(无工件预览)')+'</div>';
   }
 }
-function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 document.addEventListener('keydown', function(e) {
   if (document.getElementById('modalOverlay').classList.contains('hidden')) {
-    if (e.key === 'ArrowRight') advancePhase();
-    if (e.key === 'ArrowLeft') prevPhase();
-    if (e.key === '0') resetAll();
+    if (e.key === 'ArrowRight') { e.preventDefault(); advancePhase(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevPhase(); }
+    if (e.key === '0') { e.preventDefault(); resetAll(); }
   } else {
-    if (e.key === 'Escape') closeModal();
-    if (e.key === '1') switchModalTab(0);
-    if (e.key === '2') switchModalTab(1);
+    if (e.key === 'Escape') { e.preventDefault(); closeModal(); }
+    if (e.key === '1') { e.preventDefault(); switchModalTab(0); }
+    if (e.key === '2') { e.preventDefault(); switchModalTab(1); }
   }
 });
 
