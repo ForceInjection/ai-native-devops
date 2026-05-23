@@ -11,6 +11,7 @@
 | 3    | [`cloudpilot-mockup.html`](./cloudpilot-mockup.html) | P2 PRD → UI/UX             | 可交互 Mock UI（5 视图、状态机、计费模拟） |
 | 4    | [`03-ddd-modeling.md`](./03-ddd-modeling.md)         | P3 领域建模                | 9 个 `@ddd-*` Skill 流水线产出             |
 | 5    | [`04-openspec/`](./04-openspec/)                     | P4 OpenSpec 规范定义       | proposal / design / tasks / 3 个 spec      |
+| 6    | [`05-p5-code-bridge.md`](./05-p5-code-bridge.md)     | P5 Spec→代码桥接           | 项目结构、Spec→代码映射表、契约包设计、Mock→Real 切换 |
 
 ## 链路一览
 
@@ -20,6 +21,7 @@ graph LR
     B --> C[03 Mock UI]
     B --> D[04 DDD 建模]
     D --> E[05 OpenSpec]
+    E --> F[06 代码桥接]
     C -.可视化反馈.-> B
     D -.回溯触发.-> D
 ```
