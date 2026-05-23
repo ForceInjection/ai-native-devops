@@ -47,6 +47,7 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
     │       ├── billing/spec.md            (billing requirements + scenarios)
     │       ├── resource-management/spec.md
     │       └── resource-request/spec.md   (resource-request requirements + scenarios)
+    ├── config.yaml                        (AI context injection: schema, context, rules for proposal/specs/design/tasks/frontmatter/naming)
     ├── 05-p5-code-bridge.md              (P5: spec→code mapping, contract design, Mock→Real switch)
     └── cloudpilot-demo-nav.html          (interactive demo console: phases timeline + flow diagram + artifact preview modals)
 ```
