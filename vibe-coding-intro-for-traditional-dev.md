@@ -504,7 +504,7 @@ sequenceDiagram
 | III 战术 | `@ddd-aggregates`          | 聚合根、不变量、事务边界             | 申请单聚合（5 状态机 + 幂等约束）、资源实例聚合（生命周期事件）                      |
 | III 战术 | `@ddd-domain-interactions` | 领域事件目录、领域服务、仓库接口     | `ResourceProvisionRequested` 事件、`ResourceRequestRepository` 接口                  |
 | IV 验证  | `@ddd-model-review`        | 一致性 / 完整性 / 耦合评分           | 不变量表达率、跨聚合一致性策略校验；不达标即回溯到 `@ddd-aggregates`                 |
-| V 规范   | `@ddd-openspec-bridge`     | OpenSpec 变更集（proposal/spec/...） | 直接桥接到 §2.4.5 的 `cloudpilot-case/04-openspec/`                              |
+| V 规范   | `@ddd-openspec-bridge`     | OpenSpec 变更集（proposal/spec/...） | 直接桥接到 §2.4.5 的 `cloudpilot-case/04-openspec/`                                  |
 
 **AI 提取并人工复核后的上下文拆分**（`@ddd-contexts` + `@ddd-context-map` 产出）：
 

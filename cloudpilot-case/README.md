@@ -135,3 +135,11 @@ graph LR
 # 3) 验收：grep 每个 IV-N 是否在 specs/*/spec.md 出现至少一次
  grep -rE 'IV-[1-8]' 04-openspec/specs/
 ```
+
+---
+
+## P5-P8 下一步
+
+CloudPilot 案例演示了 AI Native DevOps 的前半段（P1 需求 → P4 Spec 定义）。**规范如何驱动代码实现、测试与部署**（P5 实现 → P6 测试 → P7 验证 → P8 演进），可参考同作者的另一个案例：
+
+> **[ForceInjection/OpenSpec-practise](https://github.com/ForceInjection/OpenSpec-practise)** — 电商领域，同一套 `proposal/design/tasks/specs` 结构驱动 Node.js 和 Python 两种实现。包含完整测试覆盖、archive 工作流、`config.yaml` AI 上下文注入。
