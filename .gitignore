@@ -4,3 +4,12 @@
 
 # AI Assistant
 .qoder
+.claude/skills/
+
+
+# High value files
+*.pptx
+*.xlsx
+
+# References
+reference/
