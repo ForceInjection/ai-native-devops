@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CloudPilot Demo 导航台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#0f172a;color:#e2e8f0;min-height:100vh}
+header{background:#1e293b;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #334155}
+header h1{font-size:20px;font-weight:600}
+main{max-width:1400px;margin:0 auto;padding:24px 32px 80px}
+.timeline-wrapper{background:linear-gradient(135deg,#1a1530 0%,#1f1a35 100%);border:2px solid #4a2d7a;border-radius:20px;padding:20px;margin-bottom:24px}
+.timeline-wrapper h3{font-size:15px;color:#a78bfa;font-weight:600;letter-spacing:1px;margin-bottom:16px;padding-left:4px}
+.main-timeline{display:flex;gap:20px;margin-bottom:16px;overflow-x:auto;padding:8px 4px}
+.sub-timeline{display:flex;gap:10px;overflow-x:auto;padding:6px 6px 6px 10px;margin-left:6px;border-left:2px solid #475569}
+.phase{flex:0 0 auto;min-width:170px;background:#2d1b4e;border:2px solid #4a2d7a;border-radius:14px;padding:22px 16px;cursor:pointer;transition:all .2s;text-align:center}
+.phase:hover{border-color:#7c4db8;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.4)}
+.phase.active{border-color:#a78bfa;background:linear-gradient(135deg,#3b1f6e 0%,#2d1b4e 100%);box-shadow:0 0 0 2px #a78bfa,0 0 40px rgba(167,139,250,.25),0 10px 30px rgba(0,0,0,.4);transform:translateY(-3px)}
+.phase.gate{border-color:#92400e}
+.phase.gate.active{border-color:#f59e0b;background:linear-gradient(135deg,#5c1f00 0%,#3d1500 100%);box-shadow:0 0 0 2px #f59e0b,0 0 40px rgba(245,158,11,.25),0 10px 30px rgba(0,0,0,.4)}
+.phase.sub{min-width:125px;padding:14px 10px}
+.phase.sub .title{font-size:12px}
+.phase.sub .sub{font-size:9px}
+.phase .num{font-size:11px;color:#a78bfa;margin-bottom:8px;font-weight:600;letter-spacing:1px}
+.phase.active .num{color:#c4b5fd}
+.phase.gate .num,.phase.gate.active .num{color:#f59e0b}
+.phase .title{font-size:15px;font-weight:700;margin-bottom:6px;color:#f1f5f9}
+.phase .sub{font-size:11px;color:#a8a0c0;line-height:1.4;word-break:break-all}
+.phase-indicator{display:inline-block;width:10px;height:10px;border-radius:50%;margin-top:8px}
+.phase-indicator.done{background:#22c55e}
+.phase-indicator.current{background:#3b82f6;box-shadow:0 0 8px #3b82f6}
+.phase-indicator.pending{background:#334155}
+.detail-panel{background:#1e293b;border:1px solid #334155;border-radius:12px;padding:24px;margin-bottom:24px}
+.detail-panel h2{font-size:18px;margin-bottom:16px}
+.flow{display:flex;align-items:stretch;gap:0;margin-bottom:8px;flex-wrap:wrap}
+.flow-node{flex:1;min-width:110px;background:#0f172a;border:1px solid #1e293b;padding:12px 8px;text-align:center;display:flex;flex-direction:column;justify-content:center;border-radius:10px;margin:2px}
+.flow-node.human{border-left:3px solid #22c55e}
+.flow-node.ai{border-left:3px solid #3b82f6}
+.flow-node.clickable{cursor:pointer;transition:all .15s}
+.flow-node.clickable:hover{border-color:#3b82f6;background:#1a2740}
+.flow-node .fn-icon{font-size:18px;margin-bottom:4px;opacity:.7}
+.flow-node .fn-label{font-size:9px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:3px}
+.flow-node .fn-title{font-size:12px;color:#cbd5e1;font-weight:600;margin-bottom:2px}
+.flow-node .fn-sub{font-size:9px;color:#94a3b8;line-height:1.4}
+.flow-arrow{display:flex;align-items:center;justify-content:center;width:24px;min-width:24px;color:#334155;font-size:16px;font-weight:bold;margin:2px}
+.feedback-bar{display:flex;align-items:center;justify-content:center;gap:8px;padding:6px 0;margin-bottom:12px}
+.feedback-bar .fb-line{flex:1;height:1px;background:linear-gradient(to right,transparent,#f59e0b,transparent);max-width:200px}
+.feedback-bar .fb-text{font-size:10px;color:#f59e0b;white-space:nowrap}
+.feedback-bar .fb-arrow{color:#f59e0b;font-size:12px}
+.role-detail{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.role-card{background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:14px}
+.role-card.human{border-left:3px solid #22c55e}
+.role-card.ai{border-left:3px solid #3b82f6}
+.role-card label{font-size:10px;color:#64748b;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:6px}
+.role-card .name{font-size:13px;color:#e2e8f0;font-weight:600;margin-bottom:4px}
+.role-card .desc{font-size:12px;color:#94a3b8;line-height:1.6}
+.prompt-btn{display:inline-block;font-size:10px;padding:3px 8px;border-radius:4px;background:#1e293b;border:1px solid #334155;color:#3b82f6;cursor:pointer;margin-top:6px;transition:all .12s}
+.prompt-btn:hover{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.fn-legend{display:flex;gap:16px;justify-content:center;margin-bottom:12px;font-size:10px;color:#64748b}
+.fn-legend span{display:flex;align-items:center;gap:4px}
+.fn-legend .dot{display:inline-block;width:8px;height:8px;border-radius:2px}
+.fn-legend .dot.human{background:#22c55e}
+.fn-legend .dot.ai{background:#3b82f6}
+
+.talking-points{margin-top:12px;background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:16px}
+.talking-points h3{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+.talking-points li{font-size:13px;color:#94a3b8;margin-bottom:4px;margin-left:16px}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:100;display:flex;align-items:center;justify-content:center;animation:fadeIn .15s}
+.modal-overlay.hidden{display:none}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal-box{background:#1e293b;border:1px solid #334155;border-radius:16px;max-width:900px;width:90%;max-height:85vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid #334155}
+.modal-header h2{font-size:16px;display:flex;align-items:center;gap:8px}
+.modal-header .close{width:32px;height:32px;border-radius:8px;border:1px solid #334155;background:#0f172a;color:#94a3b8;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center}
+.modal-header .close:hover{background:#ef4444;border-color:#ef4444;color:#fff}
+.modal-tabs{display:flex;gap:0;padding:0 24px;border-bottom:1px solid #334155}
+.modal-tabs button{padding:10px 20px;border:none;background:transparent;color:#64748b;cursor:pointer;font-size:13px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .15s}
+.modal-tabs button.active{color:#3b82f6;border-bottom-color:#3b82f6}
+.modal-body{flex:1;overflow-y:auto;padding:24px}
+.modal-body pre{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:20px;font-size:13px;line-height:1.8;color:#cbd5e1;white-space:pre-wrap;font-family:"SF Mono","Menlo",monospace;max-height:50vh;overflow-y:auto}
+.modal-body .artifact-preview{background:#0f172a;border:1px solid #334155;border-radius:8px;padding:20px;font-size:13px;line-height:1.8;color:#cbd5e1;max-height:50vh;overflow-y:auto}
+.modal-body .artifact-preview h3{color:#3b82f6;font-size:15px;margin:16px 0 8px}
+.modal-body .artifact-preview h3:first-child{margin-top:0}
+.modal-body .artifact-preview p{margin-bottom:8px}
+.modal-body .artifact-preview table{width:100%;border-collapse:collapse;margin:8px 0}
+.modal-body .artifact-preview th,.modal-body .artifact-preview td{padding:6px 10px;text-align:left;border-bottom:1px solid #334155;font-size:12px}
+.modal-body .artifact-preview th{color:#64748b}
+.modal-body .artifact-preview code{background:#334155;padding:1px 6px;border-radius:4px;font-size:12px}
+
+.controls{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+.controls button{padding:8px 16px;border:1px solid #334155;border-radius:8px;background:#1e293b;color:#e2e8f0;cursor:pointer;font-size:13px;transition:all .2s}
+.controls button:hover{border-color:#475569;background:#334155}
+.controls button.primary{background:#3b82f6;border-color:#3b82f6;color:#fff}
+.summary-bar{display:flex;gap:24px;margin-bottom:24px}
+.summary-card{flex:1;background:#1e293b;border:1px solid #334155;border-radius:10px;padding:16px;text-align:center}
+.summary-card .val{font-size:24px;font-weight:700;margin-bottom:4px}
+.summary-card .lbl{font-size:12px;color:#64748b}
+</style>
+</head>
+<body>
+<header>
+  <h1>CloudPilot Demo 导航台</h1>
+</header>
+
+<main>
+<div class="summary-bar">
+  <div class="summary-card"><div class="val" style="color:#22c55e" id="doneCount">3</div><div class="lbl">已完成阶段</div></div>
+  <div class="summary-card"><div class="val" style="color:#3b82f6" id="currentPhase">P2</div><div class="lbl">当前阶段</div></div>
+  <div class="summary-card"><div class="val" style="color:#94a3b8" id="remainingCount">3</div><div class="lbl">剩余阶段</div></div>
+</div>
+
+<div class="controls">
+  <button class="primary" onclick="resetAll()">从头开始</button>
+  <button onclick="advancePhase()">下一阶段 ▶</button>
+  <button onclick="prevPhase()">◀ 上一阶段</button>
+</div>
+
+<div class="timeline-wrapper">
+  <h3>工作流阶段</h3>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<div class="detail-panel" id="detailPanel">
+  <h2 id="detailTitle">选择一个阶段查看详情</h2>
+  <div id="detailContent" style="color:#64748b;text-align:center;padding:32px">点击上方时间线中的任意阶段</div>
+</div>
+
+</main>
+
+<!-- Modal -->
+<div class="modal-overlay hidden" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h2 id="modalTitle"></h2>
+      <button class="close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-tabs" id="modalTabs"></div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script>
+// Embedded content for modals
+var prompts = {
+  'P1-pre': '角色：业务分析师。\n输入：${meeting_transcripts}（三场访谈：研发负责人 R-Lead、运维 OPS、财务 FIN）。\n任务：综合访谈记录，输出 markdown，包含：\n  1. frontmatter（阶段 / 上游输入 / 下游消费 / 责任人 / AI 草稿置信度）\n  2. 三方访谈正文（角色 / 时长 / 关键 Q&A 摘录，保留原话特征）\n  3. 痛点清单 P1~PN（频次 / 影响 / 来源）\n  4. 功能种子 F1~FN（映射到痛点，标注 must-have / nice-to-have / 后续迭代）\n  5. 范围声明（in-scope / non-goals）\n约束：仅人工已表达的诉求入表；不要臆造功能。\n输出：写入 01-interview-notes.md。',
+  'P1': '角色：产品经理。\n输入：01-interview-notes.md。\n任务：基于访谈输出结构化 PRD，10 节：\n  1. 背景  2. 目标/非目标  3. 用户画像（personas）  4. 核心流程（含 Mermaid sequenceDiagram）\n  5. 功能需求 FR-NN  6. 非功能需求 NFR-NN  7. 数据模型骨架  8. 验收标准 AC\n  9. 上线计划（MVP/后续迭代切片）  10. 待澄清问题\n约束：FR/NFR 全部可测；状态机必须显式列出（PENDING→APPROVED→PROVISIONED→RELEASED + REJECTED）。\n输出：写入 02-prd.md（覆盖写）。',
+  'P2': '角色：前端原型设计师。\n输入：02-prd.md §5 FR + §4 状态机。\n任务：单文件 HTML（含内联 CSS + JS），覆盖 5 视图：\n  - 资源申请单提交 / 我的申请 / 团队审批 / 项目成本 / Mock 设置\n  - localStorage 持久化；setInterval 模拟 Provisioner（5s 后从 APPROVED → PROVISIONED）\n  - 实时报价（PricingTable 内嵌 JS 常量）\n约束：纯静态，浏览器双击即可运行；不引入任何外部框架。\n输出：写入 cloudpilot-mockup.html。',
+  'P3': '@ddd-modeler\n输入 PRD：02-prd.md\n输出：03-ddd-modeling.md（覆盖写）\n\n串行调用 9 个 @ddd-* Skill，5 阶段流水线。详见各子阶段指令。',
+  'P3-1': 'I 发现 · @ddd-scope\n提取业务意图，形成问题陈述 + 价值陈述。明确目标/非目标、约束与假设、术语种子、风险清单。\n\nI 发现 · @ddd-discover\n按时间顺序梳理领域事件流，标注每个事件的触发动作和来源角色。提取跨角色热点和歧义清单，标注对建模决策的影响。',
+  'P3-2': 'II 战略 · @ddd-subdomains\n将业务拆分为 Core / Supporting / Generic 子域，每个子域标注职责和分类理由。\n\nII 战略 · @ddd-contexts\n为每个子域定义限界上下文，明确核心职责和主要聚合。\n\nII 战略 · @ddd-context-map\n绘制上下文映射图（Mermaid），标注集成模式：ACL（防腐层）、U-D（上游-下游）、OHS（开放主机服务）。',
+  'P3-3': 'III 战术 · @ddd-aggregates\n为每个限界上下文设计聚合根，定义 IV-N 不变量（稳定编号）、绘制状态机（Mermaid stateDiagram-v2）、明确事务边界。\n\nIII 战术 · @ddd-domain-interactions\n定义领域事件目录（发布者/订阅者/关键字段）、仓库接口（TypeScript）、领域服务接口。',
+  'P3-4': 'IV 验证 · @ddd-model-review\n对模型进行 4 维度评分：不变量表达率（IV-N 覆盖率）、完整性（需求→模型映射）、一致性（术语/状态机/事件无冲突）、耦合度（上下文间依赖合理）。\n\n硬约束：总分 < 80% 停止，报告需回溯的上游 Skill。当前评分 94%，通过。',
+  'P3-5': 'V 规范 · @ddd-openspec-bridge\n生成 DDD 工件 → OpenSpec 文件槽的桥接映射表。将每个 IV-N 映射到对应 spec 文件，将领域事件映射到 spec 的 Events 章节，将仓库/服务接口映射到 tasks.md。',
+  'P4': '@openspec-author\n输入 DDD 模型：03-ddd-modeling.md\n输出目录：04-openspec/（覆盖写）\n\n调用 openspec-assistant skill（架构师角色），按 @ddd-openspec-bridge 的桥接规则产出：\n  - proposal.md   ← 子域 + 上下文（II 战略）\n  - design.md     ← 上下文映射 + 关键决策（II 战略 + III 战术）\n  - tasks.md      ← 仓库/服务接口（III 战术）展开为实现拆解\n  - specs/<context>/spec.md × 3（resource-request / resource-management / billing）\n\n硬约束：\n  - 每个 IV-N 不变量必须在某个 specs/*/spec.md 中至少出现一个 #### Scenario: 块\n  - spec 必须使用 ### Requirement: + #### Scenario: 结构（OpenSpec 规范）\n  - 不要新增 DDD 模型未提及的概念；如有缺口，先回溯 ddd-modeler',
+  'P5': '此阶段由架构师预定义参考架构，同时 AI 基于 DDD+Spec 实时推导代码结构并对比。\n\nAI 推导 Prompt（/cloudpilot-demo Phase 6）：\n读取 03-ddd-modeling.md（提取 IV-N、聚合、领域事件、仓库/服务接口）和 04-openspec/specs/（提取 Requirement + Scenario），按以下 5 节生成 05-code-structure.md：\n  1. 项目结构：从 spec 的 capability 推导 monorepo 结构\n  2. Spec→代码映射表：逐 IV-N 列出 Requirement → 代码文件 → 测试文件\n  3. 契约包类型定义：从领域事件目录推导 TypeScript 类型\n  4. Mock→Real 切换：Provisioner 接口分离\n  5. Scenario→测试映射示例\n\n对比：grep IV-N 数量、services/ 数量、Provisioner 接口是否一致'
+};
+
+var artifacts_preview = {
+  '01-interview-notes.md': '<h3>01 · 原始需求（访谈记录）</h3>'+
+    '<p><strong>阶段</strong>：P1 前置 · 业务调研 | <strong>AI 草稿置信度</strong>：高</p>'+
+    '<p><strong>干系人</strong>：R-Lead（研发负责人）、OPS（SRE 运维）、FIN（财务/FinOps）</p>'+
+    '<h3>痛点清单（AI 提取）</h3>'+
+    '<table><tr><th>#</th><th>痛点</th><th>频率</th><th>来源</th></tr>'+
+    '<tr><td>P1</td><td>资源申请周期 2~3 天</td><td>高</td><td>R-Lead</td></tr>'+
+    '<tr><td>P2</td><td>规格手填易错</td><td>高</td><td>OPS</td></tr>'+
+    '<tr><td>P3</td><td>申请前看不到价格</td><td>高</td><td>R-Lead</td></tr>'+
+    '<tr><td>P4</td><td>资源释放靠自觉</td><td>中</td><td>OPS, FIN</td></tr>'+
+    '<tr><td>P5</td><td>缺乏项目维度成本视图</td><td>高</td><td>FIN</td></tr>'+
+    '<tr><td>P6</td><td>审批链跨部门走得慢</td><td>高</td><td>R-Lead</td></tr></table>'+
+    '<h3>功能种子（F1~F6）</h3>'+
+    '<p>F1 自助下单(P0) · F2 实时报价(P0) · F3 审批工作流(P0) · F4 自动配置(P0) · F5 项目成本看板(P0) · F6 到期告警(后续迭代)</p>',
+  '02-prd.md': '<h3>02 · CloudPilot MVP · PRD</h3>'+
+    '<p><strong>阶段</strong>：P1 愿景→PRD | <strong>责任人</strong>：R-Lead | <strong>AI 草稿置信度</strong>：高</p>'+
+    '<h3>10 节结构</h3><p>1.背景与愿景 · 2.目标/非目标 · 3.用户画像（3 personas） · 4.核心流程（Mermaid 时序图） · 5.功能需求（11 FR） · 6.非功能需求（6 NFR） · 7.数据模型骨架（3 对象+状态机） · 8.验收标准（6 AC） · 9.上线策略 · 10.待澄清（Q1~Q3）</p>'+
+    '<h3>状态机</h3><p><code>PENDING → APPROVED → PROVISIONED → RELEASED</code>（+ <code>PENDING → REJECTED</code>）</p>'+
+    '<h3>关键 FR</h3><table><tr><th>ID</th><th>名称</th><th>优先级</th></tr>'+
+    '<tr><td>FR-01</td><td>自助下单</td><td>P0</td></tr><tr><td>FR-02</td><td>实时报价 < 500ms</td><td>P0</td></tr>'+
+    '<tr><td>FR-03</td><td>幂等提交</td><td>P0</td></tr><tr><td>FR-04</td><td>审批工作流</td><td>P0</td></tr>'+
+    '<tr><td>FR-05</td><td>自动配置 ≤ 30min</td><td>P0</td></tr><tr><td>FR-08</td><td>项目成本中心</td><td>P0</td></tr></table>',
+  'cloudpilot-mockup.html': '<h3>CloudPilot Mock UI</h3>'+
+    '<p><strong>5 视图</strong>：资源申请表单 · 我的申请 · 团队审批 · 项目成本 · Mock 设置</p>'+
+    '<p><strong>技术栈</strong>：单文件 HTML，内联 CSS + JS，localStorage 持久化，零外部依赖</p>'+
+    '<p><strong>Mock Provisioner</strong>：批准后 5s 自动 APPROVED→PROVISIONED（setInterval 模拟真实 30min 交付）</p>'+
+    '<p><strong>PricingTable</strong>：5 种资源类型（ECS/RDS/OSS/Redis/SLB）× 4 规格，内嵌 JS 常量，实时报价</p>'+
+    '<p><strong>使用方式</strong>：浏览器双击打开即可交互，无需启动服务器</p>',
+  '03-ddd-modeling.md': '<h3>03 · DDD 建模流水线</h3>'+
+    '<p><strong>阶段</strong>：P3 领域建模 | <strong>责任人</strong>：架构师+R-Lead | <strong>总分</strong>：94%（通过 ✅）</p>'+
+    '<h3>5 阶段 / 9 Skill 流水线</h3>'+
+    '<p>I 发现（@ddd-scope + @ddd-discover）→ II 战略（@ddd-subdomains + @ddd-contexts + @ddd-context-map）→ III 战术（@ddd-aggregates + @ddd-domain-interactions）→ IV 验证（@ddd-model-review，< 80% 回溯）→ V 规范（@ddd-openspec-bridge）</p>'+
+    '<h3>8 个聚合不变量</h3>'+
+    '<table><tr><th>IV-N</th><th>不变量</th><th>类型</th></tr>'+
+    '<tr><td>IV-1</td><td>status 仅取 5 个枚举值</td><td>枚举约束</td></tr>'+
+    '<tr><td>IV-2</td><td>状态转换合法路径</td><td>转换约束</td></tr>'+
+    '<tr><td>IV-3</td><td>REJECTED 终态</td><td>终态约束</td></tr>'+
+    '<tr><td>IV-4</td><td>幂等提交</td><td>幂等性</td></tr>'+
+    '<tr><td>IV-5</td><td>type+spec 引用完整性</td><td>引用约束</td></tr>'+
+    '<tr><td>IV-6</td><td>审计日志</td><td>审计</td></tr>'+
+    '<tr><td>IV-7</td><td>配置因果关系</td><td>因果约束</td></tr>'+
+    '<tr><td>IV-8</td><td>资源释放终态</td><td>终态约束</td></tr></table>'+
+    '<h3>质量评分卡</h3><table><tr><th>维度</th><th>得分</th></tr>'+
+    '<tr><td>不变量表达率</td><td>8/8 (100%)</td></tr><tr><td>完整性</td><td>9/10 (90%)</td></tr>'+
+    '<tr><td>一致性</td><td>10/10 (100%)</td></tr><tr><td>耦合度</td><td>9/10 (90%)</td></tr></table>',
+  '04-openspec/': '<h3>04 · OpenSpec 变更集</h3>'+
+    '<p><strong>阶段</strong>：P4 OpenSpec 规范定义 | <strong>责任人</strong>：架构师</p>'+
+    '<h3>文件结构</h3><p>proposal.md · design.md · tasks.md · specs/（resource-request + resource-management + billing）</p>'+
+    '<h3>resource-request/spec.md（IV-1~IV-6）</h3>'+
+    '<p>6 个 Requirement + 11 个 Scenario。覆盖：状态枚举、状态转换、终态约束、幂等、引用完整性、审计</p>'+
+    '<h3>resource-management/spec.md（IV-7~IV-8）</h3>'+
+    '<p>2 个 Requirement + 5 个 Scenario。覆盖：因果约束、释放终态</p>'+
+    '<h3>billing/spec.md</h3>'+
+    '<p>4 个 Requirement + 7 个 Scenario。覆盖：实时报价、PricingTable、成本读模型、成本看板</p>'+
+    '<p><strong>硬约束</strong>：IV-1~IV-8 每个在 spec 中至少一个 Scenario → <code>grep -rE \'IV-[1-8]\' specs/</code> 校验 100% 覆盖</p>',
+  '05-p5-code-bridge.md': '<h3>05 · P5 代码桥接（参考架构）</h3>'+
+    '<p><strong>阶段</strong>：P5 Spec→代码桥接 | <strong>责任人</strong>：Tech Lead</p>'+
+    '<h3>Monorepo 结构</h3><p><code>contracts/</code>（共享契约包）+ <code>services/resource-request/</code> + <code>services/resource-management/</code> + <code>services/billing/</code> + <code>services/audit/</code></p>'+
+    '<h3>Spec→代码映射</h3><table><tr><th>Spec Requirement</th><th>代码文件</th><th>测试文件</th></tr>'+
+    '<tr><td>IV-1~IV-3 状态+终态</td><td>domain/ResourceRequest.ts</td><td>__tests__/ResourceRequest.test.ts</td></tr>'+
+    '<tr><td>IV-4 幂等</td><td>repo/ResourceRequestRepo.ts</td><td>__tests__/ResourceRequest.test.ts</td></tr>'+
+    '<tr><td>IV-7~IV-8 配置</td><td>domain/ResourceInstance.ts</td><td>__tests__/ResourceInstance.test.ts</td></tr></table>'+
+    '<h3>Mock→Real 切换</h3><p><code>Provisioner</code> 接口分离：<code>MockProvisioner</code>（P5 使用）→ <code>AliyunProvisioner</code>（P7 切换），核心域代码不改</p>'+
+    '<p><strong>⚡ Demo 亮点</strong>：Phase 6 中 AI 会基于同一个 DDD 模型实时推导 <code>05-code-structure.md</code>，与本文档对比。方法论一致则服务划分、IV-N 映射、接口抽象对齐。</p>'
+};
+
+var phases = [
+  { id:'P1-pre', num:'P1 前置', title:'业务访谈', sub:'01-interview-notes.md',
+    humanRole:'R-Lead / OPS / FIN（三方干系人）',
+    humanAction:'提供原始访谈材料，明确业务痛点和期望',
+    agentSkill:'业务分析师',
+    agentAction:'综合多方访谈记录，提取主题和痛点，按结构化模板输出。不做主观推断，仅基于人工已表达的内容。',
+    output:'痛点清单 P1~P6、功能种子 F1~F6、范围声明',
+    artifact:'01-interview-notes.md',
+    humanReview:'三方确认 AI 提取的痛点清单和功能种子无遗漏、无曲解' },
+  { id:'P1', num:'P1', title:'PRD', sub:'02-prd.md',
+    humanRole:'R-Lead（业务方负责人）',
+    humanAction:'提供访谈记录，明确 10 节 PRD 结构和状态机要求',
+    agentSkill:'产品经理',
+    agentAction:'基于访谈记录，按 10 节模板输出结构化 PRD。FR/NFR 全部可测，状态机显式列出，frontmatter 标注置信度。',
+    output:'10 节 PRD：11 FR + 6 NFR + Mermaid 时序图 + 状态机 + 数据模型骨架 + 6 AC',
+    artifact:'02-prd.md',
+    humanReview:'三方评审 PRD 草稿，确认功能需求覆盖所有痛点、验收标准明确可测。签字后进入 P2。' },
+  { id:'P2', num:'P2', title:'Mock UI', sub:'mockup.html',
+    humanRole:'R-Lead + 潜在用户',
+    humanAction:'提供 PRD 的功能需求和状态机定义',
+    agentSkill:'前端原型设计师',
+    agentAction:'读取 PRD 的 FR 和状态机，生成单文件可交互 HTML 原型。内嵌 PricingTable 和 Mock Provisioner，零外部依赖。',
+    output:'单文件 HTML：5 视图 + localStorage 持久化 + Mock Provisioner（setInterval 5s）',
+    artifact:'cloudpilot-mockup.html',
+    humanReview:'浏览器打开原型，验证交互流程、状态推进和报价计算。签字后进入 P3。' },
+  // P3 — sub-phases shown in secondary timeline when selected
+  { id:'P3', num:'P3', title:'DDD 建模', sub:'03-ddd-modeling.md',
+    humanRole:'架构师 + R-Lead',
+    humanAction:'提供 PRD 作为输入，明确 DDD 建模范围',
+    agentSkill:'@ddd-* × 9（ddd-modeler subagent）',
+    agentAction:'串行驱动 9 个 @ddd-* Skill，5 阶段流水线。第 8 步评分 < 80% 自动回溯。',
+    output:'8 个 IV-N + 1 状态机（5 状态）+ 领域事件目录 + 仓库/服务接口 + 质量评分卡 94% + DDD→OpenSpec 桥接表',
+    artifact:'03-ddd-modeling.md',
+    humanReview:'复核子域分类、聚合边界、IV-N 完备性。评分卡通过门禁后签字进入 P4。',
+    subPhases: [
+      { id:'P3-1', num:'P3-I', title:'发现', sub:'@ddd-scope, @ddd-discover',
+        humanRole:'架构师 + R-Lead', humanAction:'提供 PRD，明确建模范围和业务边界',
+        agentSkill:'@ddd-scope + @ddd-discover',
+        agentAction:'提取问题陈述、目标/非目标、约束、术语种子、风险清单；梳理领域事件流，标注热点和歧义。',
+        output:'问题陈述 + 目标/非目标 + 领域事件流 + 热点清单',
+        humanReview:'确认业务目标不偏离、事件流无遗漏' },
+      { id:'P3-2', num:'P3-II', title:'战略', sub:'@ddd-subdomains, @ddd-contexts, @ddd-context-map',
+        humanRole:'架构师', humanAction:'审核子域分类和上下文划分',
+        agentSkill:'@ddd-subdomains + @ddd-contexts + @ddd-context-map',
+        agentAction:'拆分 Core/Supporting/Generic 子域；划分限界上下文并定义职责；绘制上下文映射图（ACL/U-D/OHS）。',
+        output:'5 子域 + 5 上下文 + Mermaid 映射图 + 集成模式表',
+        humanReview:'确认子域分类合理、上下文边界正确' },
+      { id:'P3-3', num:'P3-III', title:'战术', sub:'@ddd-aggregates, @ddd-domain-interactions',
+        humanRole:'架构师', humanAction:'审核聚合设计和接口定义',
+        agentSkill:'@ddd-aggregates + @ddd-domain-interactions',
+        agentAction:'设计聚合根、定义 IV-N 不变量、绘制状态机；定义领域事件目录、仓库/服务 TypeScript 接口。',
+        output:'3 聚合 + 8 IV-N + 1 状态机（5 状态）+ 6 事件 + TS 接口',
+        humanReview:'确认 IV-N 完备、状态机合法' },
+      { id:'P3-4', num:'P3-IV', title:'验证', sub:'@ddd-model-review ⚠门禁',
+        humanRole:'架构师 + R-Lead', humanAction:'审核评分卡，决定是否通过门禁',
+        agentSkill:'@ddd-model-review',
+        agentAction:'4 维度评分（表达率/完整性/一致性/耦合度）。< 80% 自动停止并回溯。',
+        output:'评分卡 94% ✅（8/8, 9/10, 10/10, 9/10）',
+        humanReview:'确认通过门禁。若 < 80%，回溯到 P3-III 或 P3-II',
+        gate:true },
+      { id:'P3-5', num:'P3-V', title:'规范', sub:'@ddd-openspec-bridge',
+        humanRole:'架构师', humanAction:'确认桥接表完整，准备交接 P4',
+        agentSkill:'@ddd-openspec-bridge',
+        agentAction:'生成 DDD 工件 → OpenSpec 文件槽的桥接映射表。',
+        output:'DDD→OpenSpec 桥接表（9 行映射）',
+        humanReview:'确认每个 IV-N 都有对应 OpenSpec 位置' }
+    ] },
+  { id:'P4', num:'P4', title:'OpenSpec', sub:'04-openspec/',
+    humanRole:'架构师',
+    humanAction:'提供 DDD 模型中的 @ddd-openspec-bridge 桥接表',
+    agentSkill:'openspec-assistant + @ddd-openspec-bridge（openspec-author）',
+    agentAction:'按桥接表生成 proposal/design/tasks + 3 份 capability spec。每个 IV-N 映射到至少一个 Scenario，使用 GIVEN/WHEN/THEN 结构。',
+    output:'proposal + design + tasks + 3 spec（resource-request / resource-management / billing），23 Scenario',
+    artifact:'04-openspec/',
+    humanReview:'校验 IV-N 覆盖率 100%、Spec 格式符合 OpenSpec 规范、未引入模型之外的概念。' },
+  { id:'P5', num:'P5', title:'代码桥接', sub:'05-p5-code-bridge.md',
+    humanRole:'Tech Lead',
+    humanAction:'提供 DDD 模型和 Spec，明确架构推导方向',
+    agentSkill:'代码架构推导',
+    agentAction:'读取 DDD 模型和 Spec，推导 monorepo 结构、Spec→代码映射表、契约包类型定义、Mock→Real 切换点。与参考架构对比。',
+    output:'Monorepo 结构 + Spec→代码映射 + 契约包设计 + Mock→Real 切换 + Scenario→测试映射',
+    artifact:'05-p5-code-bridge.md',
+    humanReview:'复核服务划分、接口抽象和 Mock→Real 切换方案。签署后进入 P6 实现。' }
+];
+
+var currentMain = 2, currentSub = -1, modalTab = 0;
+
+function currentPhase() {
+  if (currentMain === 3 && currentSub >= 0) return phases[3].subPhases[currentSub];
+  return phases[currentMain];
+}
+
+function currentPhaseId() {
+  if (currentMain === 3 && currentSub >= 0) return phases[3].subPhases[currentSub].id;
+  return phases[currentMain].id;
+}
+
+function renderAll() {
+  renderTimeline(); renderDetail(); updateSummary();
+}
+
+function renderTimeline() {
+  var html = '<div class="main-timeline">';
+  phases.forEach(function(p, i) {
+    var cls = 'phase' + (i === currentMain && currentSub === -1 ? ' active' : '');
+    var indCls = i < currentMain ? 'done' : (i === currentMain && currentSub === -1 ? 'current' : 'pending');
+    if (i === 3 && currentMain === 3 && currentSub >= 0) indCls = 'current';
+    html += '<div class="'+cls+'" onclick="selectMain('+i+')">'+
+      '<div class="num">'+p.num+'</div>'+
+      '<div class="title">'+p.title+'</div>'+
+      '<div class="sub">'+p.sub+'</div>'+
+      '<div class="phase-indicator '+indCls+'"></div></div>';
+  });
+  html += '</div>';
+
+  // P3 sub-timeline
+  if (currentMain === 3) {
+    html += '<div style="margin-top:8px;display:flex;align-items:center;gap:4px">'+
+      '<span style="font-size:9px;color:#3b82f6;min-width:18px;text-align:center">P3</span>'+
+      '<span style="color:#334155">▸</span>'+
+      '<div class="sub-timeline">';
+    var subPhases = phases[3].subPhases;
+    subPhases.forEach(function(sp, i) {
+      var cls = 'phase sub' + (i === currentSub ? ' active' : '');
+      if (sp.gate) cls += ' gate';
+      var indCls = i < currentSub ? 'done' : (i === currentSub ? 'current' : 'pending');
+      if (currentSub === -1) indCls = 'pending';
+      html += '<div class="'+cls+'" onclick="event.stopPropagation();selectSub('+i+')">'+
+        '<div class="num">'+sp.num+'</div>'+
+        '<div class="title">'+sp.title+'</div>'+
+        '<div class="sub">'+sp.sub+'</div>'+
+        '<div class="phase-indicator '+indCls+'"></div></div>';
+    });
+    html += '</div></div>';
+  }
+
+  document.getElementById('timeline').innerHTML = html;
+}
+
+function renderDetail() {
+  var p = currentPhase();
+  document.getElementById('detailTitle').textContent = p.num + ' · ' + p.title;
+
+  var html = '';
+  html += '<div class="fn-legend"><span><span class="dot human"></span> 人类</span><span><span class="dot ai"></span> Agent</span></div>';
+
+  // Flow with arrows: 4 nodes, feedback from node 4 back to node 2
+  html += '<div class="flow">';
+
+  // Node 1: 人类准备输入
+  html += flowNode('human', '&#x1F464;', '人类', p.humanRole, p.humanAction);
+
+  html += '<div class="flow-arrow">→</div>';
+
+  // Node 2: 通用 Agent 接收指令
+  html += flowNode('ai', '&#x1F9E0;', 'Agent', '通用 Agent', '接收指令，理解意图', "showModal('"+p.id+"',0)", '查看指令');
+
+  html += '<div class="flow-arrow">→</div>';
+
+  // Node 3: Agent 调用具体 Skill 执行输出
+  html += flowNode('ai', '&#x1F916;', 'Agent', 'Skill: '+p.agentSkill, p.agentAction, "showModal('"+p.id+"',1)", '查看产出');
+
+  html += '<div class="flow-arrow">→</div>';
+
+  // Node 4: 人类评审反馈
+  html += flowNode('human', '&#x1F50D;', '人类', p.humanRole, p.humanReview);
+
+  html += '</div>';
+
+  // Feedback loop: node 4 → node 2
+  html += '<div class="feedback-bar">'+
+    '<span style="color:#f59e0b;font-size:13px">↺ 反馈</span>'+
+    '<span style="font-size:10px;color:#64748b">不通过 → 人类给出修改意见 → 回到第 2 步，Agent 重新执行</span>'+
+    '<span style="color:#22c55e;font-size:11px">通过 → 签字进入下一阶段</span>'+
+    '</div>';
+
+  // Role cards
+  html += '<div class="role-detail">'+
+    '<div class="role-card human"><label>人类角色与职责</label>'+
+    '<div class="name">'+p.humanRole+'</div>'+
+    '<div class="desc">'+p.humanReview+'</div></div>'+
+    '<div class="role-card ai"><label>Agent 角色与 Skill</label>'+
+    '<div class="name">'+p.agentSkill+'</div>'+
+    '<div class="desc">'+p.agentAction+'</div></div>'+
+    '</div>';
+
+  // Gate highlight for P3-IV
+  if (p.gate) {
+    html += '<div class="feedback-bar" style="margin-top:12px">'+
+      '<span style="color:#f59e0b;font-size:13px">⚠ 质量门禁</span>'+
+      '<span style="font-size:10px;color:#64748b">@ddd-model-review 评分 < 80% → 自动停止，回溯到 P3-III（战术）或 P3-II（战略）</span>'+
+      '<span style="color:#22c55e;font-size:11px">当前总分 94% ✅ 通过</span>'+
+      '</div>';
+  }
+
+  document.getElementById('detailContent').innerHTML = html;
+}
+
+function flowNode(cls, icon, label, role, action, onclick, btnLabel) {
+  var clickable = !!onclick;
+  var c = 'flow-node '+cls + (clickable ? ' clickable' : '');
+  var h = '<div class="'+c+'"'+(onclick ? ' onclick="'+onclick+'"' : '')+'>'+
+    '<div class="fn-icon">'+icon+'</div>'+
+    '<div class="fn-label">'+label+'</div>'+
+    '<div class="fn-title">'+role+'</div>'+
+    '<div class="fn-sub">'+action+'</div>';
+  if (clickable && btnLabel) h += '<span class="prompt-btn">'+btnLabel+'</span>';
+  h += '</div>';
+  return h;
+}
+
+function updateSummary() {
+  var totalMain = phases.length - 1;
+  document.getElementById('doneCount').textContent = currentMain;
+  var cp = currentPhase();
+  document.getElementById('currentPhase').textContent = cp.num;
+  document.getElementById('remainingCount').textContent = totalMain - currentMain;
+}
+
+function selectMain(i) {
+  currentMain = i; currentSub = -1;
+  renderAll();
+}
+function selectSub(i) {
+  currentMain = 3; currentSub = i;
+  renderAll();
+}
+function advancePhase() {
+  if (currentMain === 3 && currentSub < phases[3].subPhases.length - 1 && currentSub >= 0) {
+    currentSub++;
+  } else if (currentMain < phases.length - 1) {
+    currentMain++; currentSub = -1;
+  }
+  renderAll();
+}
+function prevPhase() {
+  if (currentMain === 3 && currentSub > 0) {
+    currentSub--;
+  } else if (currentSub === 0) {
+    currentSub = -1;
+  } else if (currentMain > 0) {
+    currentMain--; currentSub = -1;
+    if (currentMain === 3) currentSub = phases[3].subPhases.length - 1;
+  }
+  renderAll();
+}
+function resetAll() { currentMain = 0; currentSub = -1; renderAll(); }
+
+// Modal
+function showModal(phaseId, tab) {
+  var p = phases.find(function(x){return x.id===phaseId});
+  // check sub-phases too
+  if (!p && phases[3].subPhases) {
+    p = phases[3].subPhases.find(function(x){return x.id===phaseId});
+  }
+  if (!p) return;
+  document.getElementById('modalTitle').textContent = p.num + ' · ' + p.title;
+  modalTab = tab;
+  var tabs = '';
+  if (prompts[phaseId]) tabs += '<button class="'+(tab===0?'active':'')+'" onclick="switchModalTab(0)">Agent 指令</button>';
+  var artifactKey = p.artifact || (currentMain === 3 ? '03-ddd-modeling.md' : null);
+  if (artifactKey && artifacts_preview[artifactKey]) tabs += '<button class="'+(tab===1?'active':'')+'" onclick="switchModalTab(1)">工件内容</button>';
+  document.getElementById('modalTabs').innerHTML = tabs;
+  renderModalBody(artifactKey);
+  document.getElementById('modalOverlay').classList.remove('hidden');
+}
+
+function switchModalTab(t) { modalTab = t; document.querySelectorAll('.modal-tabs button').forEach(function(b,i){ b.className = i===t?'active':''; }); renderModalBody(); }
+function closeModal() { document.getElementById('modalOverlay').classList.add('hidden'); }
+
+function renderModalBody(artifactKey) {
+  var id = currentPhaseId();
+  if (modalTab === 0) {
+    document.getElementById('modalBody').innerHTML = '<pre>'+escapeHtml(prompts[id] || '(无 Agent 指令数据)')+'</pre>';
+  } else {
+    document.getElementById('modalBody').innerHTML = '<div class="artifact-preview">'+(artifacts_preview[artifactKey] || '(无工件预览)')+'</div>';
+  }
+}
+function escapeHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+document.addEventListener('keydown', function(e) {
+  if (document.getElementById('modalOverlay').classList.contains('hidden')) {
+    if (e.key === 'ArrowRight') advancePhase();
+    if (e.key === 'ArrowLeft') prevPhase();
+    if (e.key === '0') resetAll();
+  } else {
+    if (e.key === 'Escape') closeModal();
+    if (e.key === '1') switchModalTab(0);
+    if (e.key === '2') switchModalTab(1);
+  }
+});
+
+renderAll();
+</script>
+</body>
+</html>
