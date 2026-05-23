@@ -47,7 +47,8 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
     │       ├── billing/spec.md            (billing requirements + scenarios)
     │       ├── resource-management/spec.md
     │       └── resource-request/spec.md   (resource-request requirements + scenarios)
-    └── 05-p5-code-bridge.md              (P5: spec→code mapping, contract design, Mock→Real switch)
+    ├── 05-p5-code-bridge.md              (P5: spec→code mapping, contract design, Mock→Real switch)
+    └── cloudpilot-demo-nav.html          (interactive demo console: phaes timeline + flow diagram + artifact preview modals)
 ```
 
 Root-level `.pptx` files (`从 Vibe Coding 到 AI Native.pptx`, `ai-native-devops/AI Native DevOps：人机协同的工程变革框架.pptx`) are presentation slide decks derived from the articles; they are not source-of-truth documents. Both are gitignored by the `*.pptx` pattern.

@@ -96,6 +96,7 @@ CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Codi
 | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
 | [`cloudpilot-case/README.md`](./cloudpilot-case/README.md) | 案例总览、工件追溯表、全部可重放 Prompt                                                                  |
 | `cloudpilot-case/` 下各工件                                | `01-interview-notes.md` → `02-prd.md` → `cloudpilot-mockup.html` → `03-ddd-modeling.md` → `04-openspec/` → `05-p5-code-bridge.md` |
+| [`cloudpilot-demo-nav.html`](./cloudpilot-case/cloudpilot-demo-nav.html) | Demo 导航台：交互式阶段时间线 + 人机协同流程图 + 工件预览弹窗 |
 
 ---
 

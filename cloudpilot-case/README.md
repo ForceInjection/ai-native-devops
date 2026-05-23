@@ -12,6 +12,7 @@
 | 4    | [`03-ddd-modeling.md`](./03-ddd-modeling.md)         | P3 领域建模                | 9 个 `@ddd-*` Skill 流水线产出             |
 | 5    | [`04-openspec/`](./04-openspec/)                     | P4 OpenSpec 规范定义       | proposal / design / tasks / 3 个 spec      |
 | 6    | [`05-p5-code-bridge.md`](./05-p5-code-bridge.md)     | P5 Spec→代码桥接           | 项目结构、Spec→代码映射表、契约包设计、Mock→Real 切换 |
+| 🎤   | [`cloudpilot-demo-nav.html`](./cloudpilot-demo-nav.html) | Demo 演示导航台       | 交互式阶段时间线 + 人机协同流程图 + 工件预览弹窗（演示者投影使用） |
 
 ## 链路一览
 
