@@ -38,18 +38,17 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
     ├── 02-prd.md                          (P1: structured PRD)
     ├── cloudpilot-mockup.html             (P2: interactive mock UI, 5 views, localStorage)
     ├── 03-ddd-modeling.md                 (P3: 9-skill DDD pipeline output)
-    └── 04-openspec/                       (P4: proposal, design, tasks, 3 capability specs)
-        ├── README.md                      (index + DDD→OpenSpec mapping table)
-        ├── proposal.md                    (§Why / §What Changes / §Impact)
-        ├── design.md                      (architecture, integration, key decisions)
-        ├── tasks.md                       (staged implementation breakdown)
-        └── specs/
-            ├── billing/spec.md            (billing requirements + scenarios)
-            ├── resource-management/spec.md
-            └── resource-request/spec.md   (resource-request requirements + scenarios)
+    ├── 04-openspec/                       (P4: proposal, design, tasks, 3 capability specs)
+    │   ├── README.md                      (index + DDD→OpenSpec mapping table)
+    │   ├── proposal.md                    (§Why / §What Changes / §Impact)
+    │   ├── design.md                      (architecture, integration, key decisions)
+    │   ├── tasks.md                       (staged implementation breakdown)
+    │   └── specs/
+    │       ├── billing/spec.md            (billing requirements + scenarios)
+    │       ├── resource-management/spec.md
+    │       └── resource-request/spec.md   (resource-request requirements + scenarios)
+    └── 05-p5-code-bridge.md              (P5: spec→code mapping, contract design, Mock→Real switch)
 ```
-
-`reference/GBT+42560-2023/` contains a Chinese national standard for AI DevOps capability assessment — `full.md` is the extracted markdown, the PDF is the original standard document, and `images/` holds embedded figures.
 
 Root-level `.pptx` files (`从 Vibe Coding 到 AI Native.pptx`, `ai-native-devops/AI Native DevOps：人机协同的工程变革框架.pptx`) are presentation slide decks derived from the articles; they are not source-of-truth documents. The root-level one is currently untracked.
 
