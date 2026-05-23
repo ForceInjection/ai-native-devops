@@ -88,6 +88,8 @@ Skill 的深入解读（What / When / How + Claude Code 与 QoderWork 内置 Ski
 
 ## 4. CloudPilot 端到端案例
 
+[![CloudPilot Demo](https://asciinema.org/a/Y2Ka7SqS2MO4UZ77.svg)](https://asciinema.org/a/Y2Ka7SqS2MO4UZ77)
+
 CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Coding 为日常工作模式，走通 DevOps 前 4 阶段（从三方访谈到 OpenSpec 规范）。若推进到 P5 实现阶段，可按 Architecture 三层模型落地：报价走 Tool（确定性计算）、审批走 Skill（固定 SOP）、智能推荐走 Agent（需经验沉淀）。
 
 全链路仅需 6 个工件层（访谈记录 → PRD → Mock UI → DDD 模型 → OpenSpec → 代码桥接），所有 Prompt 已记录，可由 `ddd-modeler` 和 `openspec-author` 两个 subagent 端到端重放。
