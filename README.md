@@ -19,7 +19,7 @@ graph LR
 | **AI Native DevOps**       | 团队     | AI 如何增强软件交付全流程（需求 → 设计 → 建模 → 规范 → 实现 → 验证 → 交付 → 演进），各阶段谁来负责                | [`ai-native-devops/ai-native-devops.md`](./ai-native-devops/ai-native-devops.md)                         |
 | **AI Native Architecture** | 应用架构 | AI 如何安全、可控、可度量地嵌入产品系统——不是处处用 LLM，而是该用 Tool 的地方用 Tool，该用 Agent 的地方才用 Agent | [`ai-native-architecture/ai-native-architecture.md`](./ai-native-architecture/ai-native-architecture.md) |
 
-共同立场：最终决策、风险承担、上线责任与跨团队仲裁仍由明确的人工 Owner 承担。
+> 共同立场：最终决策、风险承担、上线责任与跨团队仲裁仍由明确的人工 Owner 承担。
 
 ---
 
@@ -27,7 +27,12 @@ graph LR
 
 > Vibe Coding 是把 AI 作为研发**第一类协作者**的工程范式：开发者以**意图、约束、契约**为输入，AI 以**草稿、候选方案、自动验证**为输出，最终代码、测试与规范**全部经过人工审核与可验证门禁**才进入主线。
 
-四个基石概念：**Agent**（自主推理与行动）→ **MCP**（Agent 调 Tool 的标准化协议）→ **A2A**（Agent 间通信协议）→ **Skill**（固定 SOP 编排）。
+四个基石概念：
+
+- **Agent**：自主推理与行动
+- **MCP**：Agent 调用 Tool 的标准化协议
+- **A2A**：Agent 间通信协议
+- **Skill**：固定 SOP 编排
 
 贯穿三层的基础判断——**成本金字塔**：
 
