@@ -10,6 +10,7 @@
 # High value files
 *.pptx
 *.xlsx
+*.gif
 
 # References
 reference/
