@@ -431,7 +431,7 @@ var phases = [
     output:'IV-N 8/8 = 100%, Req+Scenario 数量对比',
     artifact:'04-openspec/',
     humanReview:'确认覆盖率 100%、方法论一致。签署后进入 P6。' },
-  { id:'P5-bridge', num:'P6: 桥接', title:'代码桥接', sub:'05-p5-code-bridge.md',
+  { id:'P5-bridge', num:'P6', title:'代码桥接', sub:'05-p5-code-bridge.md',
     humanRole:'Tech Lead',
     humanAction:'提供 DDD 模型和 Spec，明确架构推导方向',
     agentSkill:'structure-deriver',
@@ -439,7 +439,7 @@ var phases = [
     output:'Monorepo 结构 + Spec→代码映射 + 契约包设计 + Mock→Real 切换 + Scenario→测试映射',
     artifact:'05-p5-code-bridge.md',
     humanReview:'复核服务划分、接口抽象和 Mock→Real 切换方案。签署后进入 P7: 实现。' },
-  { id:'P5-impl', num:'P7: 实现', title:'实现工作流', sub:'Stage A→E',
+  { id:'P5-impl', num:'P7', title:'实现工作流', sub:'Stage A→E',
     humanRole:'Tech Lead',
     humanAction:'提供 Spec 和代码桥接文档，逐 Stage 确认门禁',
     agentSkill:'code-generator + open-code-review',
@@ -519,7 +519,7 @@ function renderTimeline() {
 
   // Sub-timeline for P3 or P5-impl
   if (currentMain === 3 || currentMain === 7) {
-    var label = currentMain === 3 ? 'P3' : 'P7: 实现';
+    var label = currentMain === 3 ? 'P3' : 'P7';
     html += '<div style="margin-top:8px;display:flex;align-items:center;gap:4px">'+
       '<span style="font-size:9px;color:#3b82f6;min-width:40px;text-align:center">'+label+'</span>'+
       '<span style="color:#334155">▸</span>'+
