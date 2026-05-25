@@ -43,14 +43,14 @@ graph LR
 
 本案例中每个工件都由「主 Agent」或「专用 Subagent + 对应 Skill」产出。下表给出生产者，下方给出可直接重放的 prompt 文本。
 
-| 文件                     | 生产者                                                               | Skill / Subagent                                  | 输入                    |
-| :----------------------- | :------------------------------------------------------------------- | :------------------------------------------------ | :---------------------- |
-| `01-interview-notes.md`  | 主 Agent                                                             | interview-synthesizer（待实现）                    | 三方访谈原始记录        |
-| `02-prd.md`              | 主 Agent                                                             | prd-generator（待实现）                            | `01-interview-notes.md` |
-| `cloudpilot-mockup.html` | 主 Agent                                                             | mockup-builder（待实现）                           | `02-prd.md` §5 FR       |
-| `03-ddd-modeling.md`     | [`ddd-modeler`](../.qoder/agents/ddd-modeler.md) subagent \*         | 9 个 `@ddd-*` skills（已实现）                     | `02-prd.md`             |
-| `04-openspec/**`         | [`openspec-author`](../.qoder/agents/openspec-author.md) subagent \* | `openspec-assistant` + `@ddd-openspec-bridge`（已实现） | `03-ddd-modeling.md`    |
-| `05-p5-code-bridge.md`   | 架构师（预定义参考）                                                 | structure-deriver（待实现，参考基线）               | `04-openspec/`          |
+| 文件                     | 生产者                                                               | Skill / Subagent                                                                    | 输入                    |
+| :----------------------- | :------------------------------------------------------------------- | :---------------------------------------------------------------------------------- | :---------------------- |
+| `01-interview-notes.md`  | 主 Agent                                                             | interview-synthesizer（待实现）                                                     | 三方访谈原始记录        |
+| `02-prd.md`              | 主 Agent                                                             | prd-generator（待实现）                                                             | `01-interview-notes.md` |
+| `cloudpilot-mockup.html` | 主 Agent                                                             | mockup-builder（待实现）                                                            | `02-prd.md` §5 FR       |
+| `03-ddd-modeling.md`     | [`ddd-modeler`](../.qoder/agents/ddd-modeler.md) subagent \*         | 9 个 `@ddd-*` skills（已实现）                                                      | `02-prd.md`             |
+| `04-openspec/**`         | [`openspec-author`](../.qoder/agents/openspec-author.md) subagent \* | `openspec-assistant` + `@ddd-openspec-bridge`（已实现）                             | `03-ddd-modeling.md`    |
+| `05-p5-code-bridge.md`   | 架构师（预定义参考）                                                 | structure-deriver（待实现，参考基线）                                               | `04-openspec/`          |
 | `cloudpilot/` (P7 代码)  | 主 Agent                                                             | code-generator + open-code-review（open-code-review 已实现，code-generator 待实现） | `04-openspec/specs/`    |
 
 > \* `.qoder/agents/` 目录不在 git 版本控制中（见 `.gitignore`）。新克隆仓库时，这两个链接不可达；Agent 定义文本可从下方 Prompt P4 / P5 的 prompt 模板重建。
@@ -159,35 +159,35 @@ graph LR
 
 ### 已实现
 
-| Skill | 类型 | 功能 |
-| :--- | :--- | :--- |
-| `@ddd-scope` | Claude Code Skill | 从 PRD 提炼问题陈述、目标/非目标、约束、术语种子、风险清单 |
-| `@ddd-discover` | Claude Code Skill | 梳理领域事件流，标注跨角色热点和歧义 |
-| `@ddd-subdomains` | Claude Code Skill | 将业务拆分为 Core / Supporting / Generic 子域 |
-| `@ddd-contexts` | Claude Code Skill | 定义限界上下文、核心职责和主要聚合 |
-| `@ddd-context-map` | Claude Code Skill | 绘制上下文映射图，标注集成模式（ACL / OHS / U-D） |
-| `@ddd-aggregates` | Claude Code Skill | 设计聚合根、IV-N 不变量、状态机、事务边界 |
-| `@ddd-domain-interactions` | Claude Code Skill | 定义领域事件目录、仓库接口、领域服务接口 |
-| `@ddd-model-review` | Claude Code Skill | 4 维度质量评分（一致性/完整性/耦合），<80% 自动回溯 |
-| `@ddd-openspec-bridge` | Claude Code Skill | 生成 DDD 工件 → OpenSpec 文件槽的桥接映射表 |
-| `openspec-assistant` | Claude Code Skill | `/opsx:*` 命令体系，支持 propose / apply / verify / archive |
-| `open-code-review` | Claude Code Skill | AI 代码评审（`ocr` CLI），读取 git diff + spec 文本，检查代码与需求匹配 |
-| `ddd-modeler` | Subagent | 串行驱动 9 个 `@ddd-*` Skill，质量门禁 <80% 回溯 |
-| `openspec-author` | Subagent | 将 DDD 模型转为完整的 OpenSpec 变更集（proposal/design/tasks/specs） |
+| Skill                      | 类型              | 功能                                                                    |
+| :------------------------- | :---------------- | :---------------------------------------------------------------------- |
+| `@ddd-scope`               | Claude Code Skill | 从 PRD 提炼问题陈述、目标/非目标、约束、术语种子、风险清单              |
+| `@ddd-discover`            | Claude Code Skill | 梳理领域事件流，标注跨角色热点和歧义                                    |
+| `@ddd-subdomains`          | Claude Code Skill | 将业务拆分为 Core / Supporting / Generic 子域                           |
+| `@ddd-contexts`            | Claude Code Skill | 定义限界上下文、核心职责和主要聚合                                      |
+| `@ddd-context-map`         | Claude Code Skill | 绘制上下文映射图，标注集成模式（ACL / OHS / U-D）                       |
+| `@ddd-aggregates`          | Claude Code Skill | 设计聚合根、IV-N 不变量、状态机、事务边界                               |
+| `@ddd-domain-interactions` | Claude Code Skill | 定义领域事件目录、仓库接口、领域服务接口                                |
+| `@ddd-model-review`        | Claude Code Skill | 4 维度质量评分（一致性/完整性/耦合），<80% 自动回溯                     |
+| `@ddd-openspec-bridge`     | Claude Code Skill | 生成 DDD 工件 → OpenSpec 文件槽的桥接映射表                             |
+| `openspec-assistant`       | Claude Code Skill | `/opsx:*` 命令体系，支持 propose / apply / verify / archive             |
+| `open-code-review`         | Claude Code Skill | AI 代码评审（`ocr` CLI），读取 git diff + spec 文本，检查代码与需求匹配 |
+| `ddd-modeler`              | Subagent          | 串行驱动 9 个 `@ddd-*` Skill，质量门禁 <80% 回溯                        |
+| `openspec-author`          | Subagent          | 将 DDD 模型转为完整的 OpenSpec 变更集（proposal/design/tasks/specs）    |
 
 ### 待实现
 
-| Skill | 拟用名 | 功能 |
-| :--- | :--- | :--- |
-| 访谈综合 | `interview-synthesizer` | 综合多方访谈记录，提取主题和痛点，按结构化模板输出 |
-| PRD 生成 | `prd-generator` | 基于访谈记录，按 10 节模板输出结构化 PRD（FR/NFR/AC/状态机） |
-| Mock UI 构建 | `mockup-builder` | 读取 PRD 的 FR 和状态机，生成单文件可交互 HTML 原型 |
-| 覆盖率校验 | `coverage-checker` | 形式校验（grep IV-N）+ 语义对比（FR/NFR/Scenario 数量对齐） |
-| 代码结构推导 | `structure-deriver` | 读取 DDD+Spec，推导 monorepo 结构、Spec→代码映射、契约包设计 |
-| 代码生成 | `code-generator` | 按 Stage A→E 流水线逐层实现（contracts→domain→repo→services），每层跑测试 |
-| Spec 验证 | `spec-validator` | 形式验证（openspec validate）+ 语义验证（LLM 逐项检查 Scenario/IV-N/状态机） |
-| 测试生成 | `test-generator` | 从 Spec 的 Scenario 提取测试用例，生成 Node.js assert 测试文件 |
-| 归档管理 | `archiver` | 条件检查 + openspec archive + OCR 终审 JSON 保存 |
+| Skill        | 拟用名                  | 功能                                                                         |
+| :----------- | :---------------------- | :--------------------------------------------------------------------------- |
+| 访谈综合     | `interview-synthesizer` | 综合多方访谈记录，提取主题和痛点，按结构化模板输出                           |
+| PRD 生成     | `prd-generator`         | 基于访谈记录，按 10 节模板输出结构化 PRD（FR/NFR/AC/状态机）                 |
+| Mock UI 构建 | `mockup-builder`        | 读取 PRD 的 FR 和状态机，生成单文件可交互 HTML 原型                          |
+| 覆盖率校验   | `coverage-checker`      | 形式校验（grep IV-N）+ 语义对比（FR/NFR/Scenario 数量对齐）                  |
+| 代码结构推导 | `structure-deriver`     | 读取 DDD+Spec，推导 monorepo 结构、Spec→代码映射、契约包设计                 |
+| 代码生成     | `code-generator`        | 按 Stage A→E 流水线逐层实现（contracts→domain→repo→services），每层跑测试    |
+| Spec 验证    | `spec-validator`        | 形式验证（openspec validate）+ 语义验证（LLM 逐项检查 Scenario/IV-N/状态机） |
+| 测试生成     | `test-generator`        | 从 Spec 的 Scenario 提取测试用例，生成 Node.js assert 测试文件               |
+| 归档管理     | `archiver`              | 条件检查 + openspec archive + OCR 终审 JSON 保存                             |
 
 ---
 
