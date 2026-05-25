@@ -12,20 +12,20 @@ header h1{font-size:20px;font-weight:600}
 main{max-width:1400px;margin:0 auto;padding:24px 32px 80px}
 .timeline-wrapper{background:linear-gradient(135deg,#1a1530 0%,#1f1a35 100%);border:2px solid #4a2d7a;border-radius:20px;padding:20px;margin-bottom:24px}
 .timeline-wrapper h3{font-size:15px;color:#a78bfa;font-weight:600;letter-spacing:1px;margin-bottom:16px;padding-left:4px}
-.main-timeline{display:flex;gap:20px;margin-bottom:16px;overflow-x:auto;padding:8px 4px}
+.main-timeline{display:flex;gap:16px;margin-bottom:16px;overflow-x:auto;padding:8px 4px}
 .sub-timeline{display:flex;gap:10px;overflow-x:auto;padding:6px 6px 6px 10px;margin-left:6px;border-left:2px solid #475569}
-.phase{flex:0 0 auto;min-width:170px;background:#2d1b4e;border:2px solid #4a2d7a;border-radius:14px;padding:22px 16px;cursor:pointer;transition:all .2s;text-align:center}
+.phase{flex:0 0 auto;min-width:138px;background:#2d1b4e;border:2px solid #4a2d7a;border-radius:14px;padding:18px 13px;cursor:pointer;transition:all .2s;text-align:center}
 .phase:hover{border-color:#7c4db8;transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,.4)}
 .phase.active{border-color:#a78bfa;background:linear-gradient(135deg,#3b1f6e 0%,#2d1b4e 100%);box-shadow:0 0 0 2px #a78bfa,0 0 40px rgba(167,139,250,.25),0 10px 30px rgba(0,0,0,.4);transform:translateY(-3px)}
 .phase.gate{border-color:#92400e}
 .phase.gate.active{border-color:#f59e0b;background:linear-gradient(135deg,#5c1f00 0%,#3d1500 100%);box-shadow:0 0 0 2px #f59e0b,0 0 40px rgba(245,158,11,.25),0 10px 30px rgba(0,0,0,.4)}
-.phase.sub{min-width:125px;padding:14px 10px}
+.phase.sub{min-width:120px;padding:14px 10px}
 .phase.sub .title{font-size:12px}
-.phase.sub .sub{font-size:9px}
-.phase .num{font-size:11px;color:#a78bfa;margin-bottom:8px;font-weight:600;letter-spacing:1px}
+.phase.sub .sub{font-size:10px}
+.phase .num{font-size:11px;color:#a78bfa;margin-bottom:7px;font-weight:600;letter-spacing:1px}
 .phase.active .num{color:#c4b5fd}
 .phase.gate .num,.phase.gate.active .num{color:#f59e0b}
-.phase .title{font-size:15px;font-weight:700;margin-bottom:6px;color:#f1f5f9}
+.phase .title{font-size:14px;font-weight:700;margin-bottom:4px;color:#f1f5f9}
 .phase .sub{font-size:11px;color:#a8a0c0;line-height:1.4;word-break:break-all}
 .phase-indicator{display:inline-block;width:10px;height:10px;border-radius:50%;margin-top:8px}
 .phase-indicator.done{background:#22c55e}
@@ -155,7 +155,14 @@ var prompts = {
   'P3-4': 'IV 验证 · @ddd-model-review\n对模型进行 4 维度评分：不变量表达率（IV-N 覆盖率）、完整性（需求→模型映射）、一致性（术语/状态机/事件无冲突）、耦合度（上下文间依赖合理）。\n\n硬约束：总分 < 80% 停止，报告需回溯的上游 Skill。当前评分 94%，通过。',
   'P3-5': 'V 规范 · @ddd-openspec-bridge\n生成 DDD 工件 → OpenSpec 文件槽的桥接映射表。将每个 IV-N 映射到对应 spec 文件，将领域事件映射到 spec 的 Events 章节，将仓库/服务接口映射到 tasks.md。',
   'P4': '@openspec-author\n输入 DDD 模型：03-ddd-modeling.md\n输出目录：04-openspec/（覆盖写）\n\n调用 openspec-assistant skill（架构师角色），按 @ddd-openspec-bridge 的桥接规则产出：\n  - proposal.md   ← 子域 + 上下文（II 战略）\n  - design.md     ← 上下文映射 + 关键决策（II 战略 + III 战术）\n  - tasks.md      ← 仓库/服务接口（III 战术）展开为实现拆解\n  - specs/<context>/spec.md × 3（resource-request / resource-management / billing）\n\n硬约束：\n  - 每个 IV-N 不变量必须在某个 specs/*/spec.md 中至少出现一个 #### Scenario: 块\n  - spec 必须使用 ### Requirement: + #### Scenario: 结构（OpenSpec 规范）\n  - 不要新增 DDD 模型未提及的概念；如有缺口，先回溯 ddd-modeler',
-  'P5': '此阶段由架构师预定义参考架构，同时 AI 基于 DDD+Spec 实时推导代码结构并对比。\n\nAI 推导 Prompt（/cloudpilot-demo Phase 6）：\n读取 03-ddd-modeling.md（提取 IV-N、聚合、领域事件、仓库/服务接口）和 04-openspec/specs/（提取 Requirement + Scenario），按以下 5 节生成 05-code-structure.md：\n  1. 项目结构：从 spec 的 capability 推导 monorepo 结构\n  2. Spec→代码映射表：逐 IV-N 列出 Requirement → 代码文件 → 测试文件\n  3. 契约包类型定义：从领域事件目录推导 TypeScript 类型\n  4. Mock→Real 切换：Provisioner 接口分离\n  5. Scenario→测试映射示例\n\n对比：grep IV-N 数量、services/ 数量、Provisioner 接口是否一致'
+  'P5': 'P5: 验收 — 覆盖率校验\n\n执行 grep 校验 IV-N 覆盖率：\ngrep -rE \'IV-[0-9]+\' 04-openspec/specs/ | sort\n\n输出：DDD 模型中定义的 IV-N 总数、Specs 中已引用的唯一 IV-N 列表、缺失项列表（如有）。确认 IV-N 8/8 = 100% 覆盖。\n\n如说"对比"：将 $OUT 与 cloudpilot-case/ 的同名文件做结构对比（FR数量、IV-N覆盖率、Scenario数量）。',
+  'P5-bridge': 'P6: 代码桥接 — AI 实时推导代码结构\n\n输入：03-ddd-modeling.md + 04-openspec/specs/\n\n读取 DDD 模型（提取 IV-N、聚合、领域事件、仓库/服务接口）和 Spec（提取 Requirement + Scenario），按以下 5 节生成 05-code-structure.md：\n  1. 项目结构：从 spec 的 capability 推导 monorepo 结构\n  2. Spec→代码映射表：逐 IV-N 列出 Requirement → 代码文件 → 测试文件\n  3. 契约包类型定义：从领域事件目录推导 TypeScript 类型\n  4. Mock→Real 切换：Provisioner 接口分离\n  5. Scenario→测试映射示例\n\n对比P6：grep IV-N 数量、services/ 数量、Provisioner 接口是否一致。',
+  'P5-impl': '角色：实现工程师。\n输入：04-openspec/specs/ + 05-code-structure.md\n流程：按 06-p5-implementation-workflow.md 定义的 Stage A→E 流水线执行：\n\nStage A · Spec 验证（Human）：\n逐项检查 spec：每个 Requirement 有 >=1 Scenario、Scenario 可转化为 assert 断言、IV-N 全覆盖、状态机边有对应 Scenario。\n\nStage B · 测试先行 Red Phase（AI）：\n从 Scenario 提取测试用例，生成 .test.ts 文件。使用 Node.js 内置 test runner + assert。运行 npm test 确认全部 ERR_MODULE_NOT_FOUND。\n\nStage C · 逐任务实现 Green Phase（AI）：\nLayer 1 contracts/ → Layer 2 domain/ → Layer 3 repo/ → Layer 4 services/ → Layer 5 http/(可选)。每层：实现 → 测试 → ocr review。\n\nStage D · 评审验证（AI+Human）：\n全量测试 + ocr 全量评审。OCR 结果按 6 类分组（异常/契约/枚举/防御性/组织/测试改进），逐类修复后回归。\n\nStage E · 归档验收：\n输出归档条件检查表。Demo/实验性实现可跳过；正式交付必须归档。\n\n对比P7：校验代码结构一致性、测试全绿、与参考 Spec 匹配。',
+  'P5-impl-A': 'Stage A · Spec 验证（spec-validator skill）\n\n两步验证：\n1. 形式验证 — openspec validate 检查格式完整性（Requirement/Scenario 结构、SHALL/MUST 规范性语言）\n2. 语义验证 — LLM 逐项检查：每个 Requirement 有 >=1 Scenario、Scenario 可转化为 assert 断言、IV-N 全覆盖、design.md 状态图边在 spec 中有对应 Scenario\n\n输出逐项通过/不通过结果 + 修复建议。不通过则循环修复 spec。',
+  'P5-impl-B': 'Stage B · 测试先行 Red Phase（AI）\n\n从 spec 的 Scenario 提取测试用例清单（contracts 层 + domain 层），按依赖顺序生成：\n  1. contracts/__tests__/status.test.ts（状态枚举+转换矩阵，纯数据）\n  2. services/resource-request/__tests__/ResourceRequest.test.ts（聚合根行为）\n\n使用 Node.js 内置 test runner + assert（非 Jest/Vitest）。\n运行 npm test 确认 Red Phase：全部 ERR_MODULE_NOT_FOUND。',
+  'P5-impl-C': 'Stage C · 逐任务实现 Green Phase（AI）\n\n按 Layer 1→5 顺序逐层实现，每层执行"实现→测试→OCR":\n  Layer 1 contracts/: status.ts, events.ts, commands.ts, interfaces.ts → node --import tsx --test contracts/__tests__/status.test.ts → ocr review -b "$(cat spec.md)"\n  Layer 2 domain/: ResourceRequest.ts（聚合根+状态机，IV-1~6）\n  Layer 3 repo/: InMemoryResourceRequestRepo\n  Layer 4 services/: RequestApplicationService + InMemoryEventBus\n  Layer 5 http/: 可选（Demo 跳过）\n\n每层要点：只实现最小代码让当前层测试变绿；不实现 spec 中没有的内容；发现缺失需求先报告。',
+  'P5-impl-D': 'Stage D · 评审验证（AI+Human）- 质量门禁 ⚠\n\n1. 运行全量测试: npm test（预期全部 GREEN）\n2. 运行全量 OCR: ocr review --commit HEAD -b "<全部 spec>" --audience agent\n3. OCR 结果按 6 类分组：异常类/接口契约/枚举/防御性验证/代码组织/测试改进\n4. 逐类修复，每轮回归 npm test\n5. 生成 Scenario→测试覆盖矩阵，确认 100%\n\n门禁：测试全绿 + OCR 0 未解决 + 覆盖 100% → 签字。',
+  'P5-impl-E': 'Stage E · 归档验收\n\n1. 输出归档条件检查表（测试全绿 + OCR 0 + 覆盖 100% + 多 capability + 正式版本）\n2. Demo/实验性实现：保存 OCR 终审 JSON，跳过归档\n3. 正式交付：openspec archive v1-mvp + OCR 终审 JSON\n\n确认代码+测试+规范三者一致。'
 };
 
 var artifacts_preview = {
@@ -221,14 +228,126 @@ var artifacts_preview = {
     '<tr><td>IV-4 幂等</td><td>repo/ResourceRequestRepo.ts</td><td>__tests__/ResourceRequest.test.ts</td></tr>'+
     '<tr><td>IV-7~IV-8 配置</td><td>domain/ResourceInstance.ts</td><td>__tests__/ResourceInstance.test.ts</td></tr></table>'+
     '<h3>Mock→Real 切换</h3><p><code>Provisioner</code> 接口分离：<code>MockProvisioner</code>（P5 使用）→ <code>AliyunProvisioner</code>（P7 切换），核心域代码不改</p>'+
-    '<p><strong>⚡ Demo 亮点</strong>：Phase 6 中 AI 会基于同一个 DDD 模型实时推导 <code>05-code-structure.md</code>，与本文档对比。方法论一致则服务划分、IV-N 映射、接口抽象对齐。</p>'
+    '<p><strong>⚡ Demo 亮点</strong>：P6: 代码桥接中 AI 会基于同一个 DDD 模型实时推导 <code>05-code-structure.md</code>，与本文档对比。方法论一致则服务划分、IV-N 映射、接口抽象对齐。</p>',
+  'P3-I-preview': '<h3>P3-I · 发现阶段产出</h3>'+
+    '<p><strong>@ddd-scope</strong>：问题陈述 + 目标/非目标 + 约束 + 术语种子 + 风险清单</p>'+
+    '<p><strong>@ddd-discover</strong>：领域事件流（主流程+备用流程）+ 跨角色热点清单 + 歧义标注</p>'+
+    '<h3>关键产出</h3>'+
+    '<table><tr><th>产出</th><th>内容</th></tr>'+
+    '<tr><td>问题陈述</td><td>私有云资源申请2~3天，OPS手工易错，FIN无实时成本</td></tr>'+
+    '<tr><td>目标</td><td>G1自助&lt;5min / G2&lt;30min自动配置 / G3项目级实时成本</td></tr>'+
+    '<tr><td>主流程</td><td>Submit→PENDING→Approve→APPROVED→Provisioner→PROVISIONED→Release→RELEASED</td></tr>'+
+    '<tr><td>备用流程</td><td>Reject→REJECTED(终态)</td></tr>'+
+    '<tr><td>术语</td><td>ResourceRequest, PricingTable, Provisioner, ProjectCost</td></tr></table>',
+  'P3-II-preview': '<h3>P3-II · 战略设计产出</h3>'+
+    '<p><strong>@ddd-subdomains</strong>：Core/Supporting/Generic 子域分类</p>'+
+    '<p><strong>@ddd-contexts</strong>：限界上下文 + 核心职责 + 主要聚合</p>'+
+    '<p><strong>@ddd-context-map</strong>：上下文映射图 + 集成模式</p>'+
+    '<h3>关键产出</h3>'+
+    '<table><tr><th>子域</th><th>类型</th><th>上下文</th></tr>'+
+    '<tr><td>ResourceRequest</td><td>Core</td><td>ResourceRequestContext</td></tr>'+
+    '<tr><td>Provisioning</td><td>Supporting</td><td>ProvisioningContext</td></tr>'+
+    '<tr><td>Billing</td><td>Supporting</td><td>BillingContext</td></tr>'+
+    '<tr><td>Audit</td><td>Generic</td><td>—</td></tr>'+
+    '<tr><td>Identity</td><td>Generic</td><td>—</td></tr></table>'+
+    '<p><strong>集成模式</strong>：RR→RM(Pub/Sub,OHS,失败→告警) | RR→Billing(ACL,不可达→拒绝)</p>',
+  'P3-III-preview': '<h3>P3-III · 战术设计产出</h3>'+
+    '<p><strong>@ddd-aggregates</strong>：聚合根 + IV-N 不变量 + 状态机 + 事务边界</p>'+
+    '<p><strong>@ddd-domain-interactions</strong>：领域事件目录 + 仓库/服务接口(TypeScript)</p>'+
+    '<h3>聚合不变量 (IV-1~8)</h3>'+
+    '<table><tr><th>IV-N</th><th>不变量</th></tr>'+
+    '<tr><td>IV-1</td><td>status仅5值</td></tr><tr><td>IV-2</td><td>合法转换路径</td></tr>'+
+    '<tr><td>IV-3</td><td>APPROVED>30min告警</td></tr><tr><td>IV-4</td><td>幂等提交</td></tr>'+
+    '<tr><td>IV-5</td><td>cost不可变</td></tr><tr><td>IV-6</td><td>释放权限受限</td></tr>'+
+    '<tr><td>IV-7</td><td>实例唯一requestId</td></tr><tr><td>IV-8</td><td>释放后终态</td></tr></table>'+
+    '<p><strong>状态机</strong>：PENDING→APPROVED/REJECTED, APPROVED→PROVISIONED, PROVISIONED→RELEASED</p>'+
+    '<p><strong>事件</strong>：ResourceRequested, RequestApproved, RequestRejected, ResourceProvisionRequested, ResourceProvisioned, ResourceReleased</p>',
+  'P3-IV-preview': '<h3>P3-IV · 验证阶段产出 ⚠质量门禁</h3>'+
+    '<p><strong>@ddd-model-review</strong>：4 维度评分，&lt;80% 自动回溯</p>'+
+    '<h3>质量评分卡</h3>'+
+    '<table><tr><th>维度</th><th>得分</th><th>说明</th></tr>'+
+    '<tr><td>一致性</td><td style="color:#22c55e">90/100</td><td>子域→上下文→聚合链路一致</td></tr>'+
+    '<tr><td>完整性</td><td style="color:#f59e0b">85/100</td><td>8个IV-N覆盖核心约束</td></tr>'+
+    '<tr><td>耦合分析</td><td style="color:#22c55e">88/100</td><td>Pub/Sub+ACL解耦</td></tr>'+
+    '<tr><td><strong>总分</strong></td><td style="color:#22c55e"><strong>88/100</strong></td><td>✅ 通过门禁 (≥80%)</td></tr></table>',
+  'P3-V-preview': '<h3>P3-V · 规范桥接产出</h3>'+
+    '<p><strong>@ddd-openspec-bridge</strong>：DDD 工件 → OpenSpec 文件槽桥接表</p>'+
+    '<h3>桥接映射</h3>'+
+    '<table><tr><th>DDD 工件</th><th>OpenSpec 文件</th></tr>'+
+    '<tr><td>scope+subdomains</td><td>proposal.md §Why/§What Changes</td></tr>'+
+    '<tr><td>context-map</td><td>design.md §架构/§集成与契约</td></tr>'+
+    '<tr><td>IV-1~6</td><td>specs/resource-request/spec.md</td></tr>'+
+    '<tr><td>IV-7~8</td><td>specs/resource-management/spec.md</td></tr>'+
+    '<tr><td>BillingContext</td><td>specs/billing/spec.md</td></tr>'+
+    '<tr><td>interactions</td><td>tasks.md + spec §Repository</td></tr></table>',
+  'Stage-A-preview': '<h3>Stage A · Spec 验证产出</h3>'+
+    '<p><strong>Agent Skill</strong>：spec-validator（形式验证 openspec validate + LLM 语义验证）</p>'+
+    '<p><strong>输入</strong>：04-openspec/specs/resource-request/spec.md + design.md</p>'+
+    '<h3>检查清单结果</h3>'+
+    '<table><tr><th>检查项</th><th>结果</th></tr>'+
+    '<tr><td>Requirement→Scenario 覆盖</td><td>✅ 6Req + 11Scen</td></tr>'+
+    '<tr><td>Scenario 可测试性</td><td>✅ 全部 THEN 可转 assert</td></tr>'+
+    '<tr><td>IV-N 全覆盖</td><td>✅ IV-1~6 全部出现</td></tr>'+
+    '<tr><td>状态机边覆盖</td><td>✅ 5条边均有对应 Scenario</td></tr></table>',
+  'Stage-B-preview': '<h3>Stage B · 测试先行 (Red Phase) 产出</h3>'+
+    '<p><strong>执行者</strong>：AI 生成测试，Human 确认 Red Phase</p>'+
+    '<h3>生成测试文件</h3>'+
+    '<table><tr><th>文件</th><th>覆盖</th><th>测试数</th></tr>'+
+    '<tr><td>contracts/__tests__/status.test.ts</td><td>IV-1, IV-2</td><td>7</td></tr>'+
+    '<tr><td>services/.../ResourceRequest.test.ts</td><td>IV-1~6</td><td>14</td></tr>'+
+    '<tr><td>services/.../ResourceRequestRepo.test.ts</td><td>仓库接口</td><td>5</td></tr>'+
+    '<tr><td>services/.../RequestApplicationService.test.ts</td><td>IV-4, IV-6</td><td>8</td></tr></table>'+
+    '<p><strong>Red Phase</strong>：<code>npm test</code> → 全部 ERR_MODULE_NOT_FOUND ✅</p>',
+  'Stage-C-preview': '<h3>Stage C · 逐任务实现 (Green Phase) 产出</h3>'+
+    '<p><strong>执行者</strong>：AI 逐层实现，Human 每层跑测试+OCR</p>'+
+    '<h3>Layer 实现结果</h3>'+
+    '<table><tr><th>Layer</th><th>文件</th><th>测试</th></tr>'+
+    '<tr><td>L1 contracts/</td><td>status, events, commands, interfaces</td><td>7 pass</td></tr>'+
+    '<tr><td>L2 domain/</td><td>ResourceRequest (聚合根+状态机)</td><td>14 pass</td></tr>'+
+    '<tr><td>L3 repo/</td><td>InMemoryResourceRequestRepo</td><td>5 pass</td></tr>'+
+    '<tr><td>L4 services/</td><td>RequestApplicationService+EventBus</td><td>8 pass</td></tr>'+
+    '<tr><td>L5 http/</td><td>Demo 跳过</td><td>—</td></tr></table>'+
+    '<p><strong>总计</strong>：32 pass, 0 fail ✅</p>',
+  'Stage-D-preview': '<h3>Stage D · 评审验证产出 ⚠质量门禁</h3>'+
+    '<p><strong>执行者</strong>：AI+Human 协同</p>'+
+    '<h3>OCR 评审结果</h3>'+
+    '<table><tr><th>类别</th><th>数量</th><th>关键发现</th></tr>'+
+    '<tr><td>异常类专用化</td><td>3</td><td>IllegalStateTransitionError, PermissionDeniedError</td></tr>'+
+    '<tr><td>接口契约不一致</td><td>3</td><td>EventBus缺subscribe, 事件缺timestamp</td></tr>'+
+    '<tr><td>枚举使用不当</td><td>2</td><td>字符串硬编码 vs 枚举值</td></tr>'+
+    '<tr><td>防御性验证缺失</td><td>3</td><td>cost/days校验, EventBus异常处理</td></tr>'+
+    '<tr><td>代码组织</td><td>4</td><td>glob路径, findById委托</td></tr>'+
+    '<tr><td>测试改进</td><td>14</td><td>增强项,不影响功能</td></tr></table>'+
+    '<p><strong>门禁</strong>：全量测试 ✅ | OCR 0未解决 ✅ | 覆盖100% ✅ → 签字进入 Stage E</p>',
+  'Stage-E-preview': '<h3>Stage E · 归档验收产出</h3>'+
+    '<p><strong>执行者</strong>：Human 决策，Agent 辅助</p>'+
+    '<h3>归档条件检查</h3>'+
+    '<table><tr><th>条件</th><th>状态</th></tr>'+
+    '<tr><td>Stage D 门禁通过</td><td>✅ 测试全绿 + OCR 0 + 覆盖100%</td></tr>'+
+    '<tr><td>多 capability</td><td>⏭ 单capability(Demo可跳过)</td></tr>'+
+    '<tr><td>下游消费者</td><td>⏭ Demo 实验性</td></tr>'+
+    '<tr><td>正式版本发布</td><td>⏭ Demo 跳过</td></tr></table>'+
+    '<p><strong>决策</strong>：实验性跳过归档 | OCR 终审 JSON 已保存为审计记录</p>',
+  'cloudpilot/': '<h3>CloudPilot 可运行代码（P7: 实现 · Stage A→E 产出）</h3>'+
+    '<p><strong>阶段</strong>：AI-Native DevOps P7: 实现 · Stage A→E | <strong>责任人</strong>：Tech Lead</p>'+
+    '<h3>项目结构</h3><p><code>contracts/src/</code>（status/events/commands/interfaces）+ <code>services/resource-request/</code>（domain/repo/services）+ <code>__tests__/</code></p>'+
+    '<h3>Stage 流水线</h3>'+
+    '<table><tr><th>Stage</th><th>产出</th><th>门禁</th></tr>'+
+    '<tr><td>A · Spec 验证</td><td>IV-1~6 全覆盖确认</td><td>✅ 通过</td></tr>'+
+    '<tr><td>B · 测试先行(Red)</td><td>4 test 文件</td><td>全部 ERR_MODULE_NOT_FOUND</td></tr>'+
+    '<tr><td>C · 逐层实现(Green)</td><td>contracts(7) → domain(14) → repo(5) → services(8)</td><td>33 pass, 0 fail</td></tr>'+
+    '<tr><td>D · OCR 评审</td><td>14 files reviewed, 22 comments</td><td>全部修复, 0 未解决</td></tr>'+
+    '<tr><td>E · 归档</td><td>OCR 终审 JSON</td><td>⏭ Demo 跳过</td></tr></table>'+
+    '<h3>测试覆盖</h3><p>16 Scenario = 100% 覆盖 | 所有 6 个 IV-N 至少 1 正例+1 反例</p>'+
+    '<h3>对比命令</h3><p><code>对比</code>（P1-P4 文档结构）· <code>对比P6</code>（代码桥接）· <code>对比P7</code>（代码结构+测试）</p>'+
+    '<p><strong>⚡ Demo 亮点</strong>：同一套 Spec 驱动了从测试到代码的完整实现。OCR 在 14 个文件中发现 22 条建议，涵盖异常设计、接口契约、枚举使用、防御性验证。所有问题修复后零回归。</p>'
 };
 
 var phases = [
   { id:'P1-pre', num:'P1 前置', title:'业务访谈', sub:'01-interview-notes.md',
     humanRole:'R-Lead / OPS / FIN（三方干系人）',
     humanAction:'提供原始访谈材料，明确业务痛点和期望',
-    agentSkill:'业务分析师',
+    agentSkill:'interview-synthesizer',
     agentAction:'综合多方访谈记录，提取主题和痛点，按结构化模板输出。不做主观推断，仅基于人工已表达的内容。',
     output:'痛点清单 P1~P6、功能种子 F1~F6、范围声明',
     artifact:'01-interview-notes.md',
@@ -236,7 +355,7 @@ var phases = [
   { id:'P1', num:'P1', title:'PRD', sub:'02-prd.md',
     humanRole:'R-Lead（业务方负责人）',
     humanAction:'提供访谈记录，明确 10 节 PRD 结构和状态机要求',
-    agentSkill:'产品经理',
+    agentSkill:'prd-generator',
     agentAction:'基于访谈记录，按 10 节模板输出结构化 PRD。FR/NFR 全部可测，状态机显式列出，frontmatter 标注置信度。',
     output:'10 节 PRD：11 FR + 6 NFR + Mermaid 时序图 + 状态机 + 数据模型骨架 + 6 AC',
     artifact:'02-prd.md',
@@ -244,7 +363,7 @@ var phases = [
   { id:'P2', num:'P2', title:'Mock UI', sub:'mockup.html',
     humanRole:'R-Lead + 潜在用户',
     humanAction:'提供 PRD 的功能需求和状态机定义',
-    agentSkill:'前端原型设计师',
+    agentSkill:'mockup-builder',
     agentAction:'读取 PRD 的 FR 和状态机，生成单文件可交互 HTML 原型。内嵌 PricingTable 和 Mock Provisioner，零外部依赖。',
     output:'单文件 HTML：5 视图 + localStorage 持久化 + Mock Provisioner（setInterval 5s）',
     artifact:'cloudpilot-mockup.html',
@@ -264,24 +383,28 @@ var phases = [
         agentSkill:'@ddd-scope + @ddd-discover',
         agentAction:'提取问题陈述、目标/非目标、约束、术语种子、风险清单；梳理领域事件流，标注热点和歧义。',
         output:'问题陈述 + 目标/非目标 + 领域事件流 + 热点清单',
+        artifact:'P3-I-preview',
         humanReview:'确认业务目标不偏离、事件流无遗漏' },
       { id:'P3-2', num:'P3-II', title:'战略', sub:'@ddd-subdomains, @ddd-contexts, @ddd-context-map',
         humanRole:'架构师', humanAction:'审核子域分类和上下文划分',
         agentSkill:'@ddd-subdomains + @ddd-contexts + @ddd-context-map',
         agentAction:'拆分 Core/Supporting/Generic 子域；划分限界上下文并定义职责；绘制上下文映射图（ACL/U-D/OHS）。',
         output:'5 子域 + 5 上下文 + Mermaid 映射图 + 集成模式表',
+        artifact:'P3-II-preview',
         humanReview:'确认子域分类合理、上下文边界正确' },
       { id:'P3-3', num:'P3-III', title:'战术', sub:'@ddd-aggregates, @ddd-domain-interactions',
         humanRole:'架构师', humanAction:'审核聚合设计和接口定义',
         agentSkill:'@ddd-aggregates + @ddd-domain-interactions',
         agentAction:'设计聚合根、定义 IV-N 不变量、绘制状态机；定义领域事件目录、仓库/服务 TypeScript 接口。',
         output:'3 聚合 + 8 IV-N + 1 状态机（5 状态）+ 6 事件 + TS 接口',
+        artifact:'P3-III-preview',
         humanReview:'确认 IV-N 完备、状态机合法' },
       { id:'P3-4', num:'P3-IV', title:'验证', sub:'@ddd-model-review ⚠门禁',
         humanRole:'架构师 + R-Lead', humanAction:'审核评分卡，决定是否通过门禁',
         agentSkill:'@ddd-model-review',
         agentAction:'4 维度评分（表达率/完整性/一致性/耦合度）。< 80% 自动停止并回溯。',
         output:'评分卡 94% ✅（8/8, 9/10, 10/10, 9/10）',
+        artifact:'P3-IV-preview',
         humanReview:'确认通过门禁。若 < 80%，回溯到 P3-III 或 P3-II',
         gate:true },
       { id:'P3-5', num:'P3-V', title:'规范', sub:'@ddd-openspec-bridge',
@@ -289,6 +412,7 @@ var phases = [
         agentSkill:'@ddd-openspec-bridge',
         agentAction:'生成 DDD 工件 → OpenSpec 文件槽的桥接映射表。',
         output:'DDD→OpenSpec 桥接表（9 行映射）',
+        artifact:'P3-V-preview',
         humanReview:'确认每个 IV-N 都有对应 OpenSpec 位置' }
     ] },
   { id:'P4', num:'P4', title:'OpenSpec', sub:'04-openspec/',
@@ -299,25 +423,79 @@ var phases = [
     output:'proposal + design + tasks + 3 spec（resource-request / resource-management / billing），23 Scenario',
     artifact:'04-openspec/',
     humanReview:'校验 IV-N 覆盖率 100%、Spec 格式符合 OpenSpec 规范、未引入模型之外的概念。' },
-  { id:'P5', num:'P5', title:'代码桥接', sub:'05-p5-code-bridge.md',
+  { id:'P5', num:'P5', title:'验收', sub:'IV-N 覆盖率校验',
+    humanRole:'Tech Lead',
+    humanAction:'提供 DDD 模型和 OpenSpec 产出',
+    agentSkill:'coverage-checker',
+    agentAction:'形式校验（grep IV-N → Spec 覆盖）+ 语义对比（FR/NFR 数量、Scenario 数量与参考基线对齐）。输出覆盖率报告和差异清单。',
+    output:'IV-N 8/8 = 100%, Req+Scenario 数量对比',
+    artifact:'04-openspec/',
+    humanReview:'确认覆盖率 100%、方法论一致。签署后进入 P6。' },
+  { id:'P5-bridge', num:'P6: 桥接', title:'代码桥接', sub:'05-p5-code-bridge.md',
     humanRole:'Tech Lead',
     humanAction:'提供 DDD 模型和 Spec，明确架构推导方向',
-    agentSkill:'代码架构推导',
+    agentSkill:'structure-deriver',
     agentAction:'读取 DDD 模型和 Spec，推导 monorepo 结构、Spec→代码映射表、契约包类型定义、Mock→Real 切换点。与参考架构对比。',
     output:'Monorepo 结构 + Spec→代码映射 + 契约包设计 + Mock→Real 切换 + Scenario→测试映射',
     artifact:'05-p5-code-bridge.md',
-    humanReview:'复核服务划分、接口抽象和 Mock→Real 切换方案。签署后进入 P6 实现。' }
+    humanReview:'复核服务划分、接口抽象和 Mock→Real 切换方案。签署后进入 P7: 实现。' },
+  { id:'P5-impl', num:'P7: 实现', title:'实现工作流', sub:'Stage A→E',
+    humanRole:'Tech Lead',
+    humanAction:'提供 Spec 和代码桥接文档，逐 Stage 确认门禁',
+    agentSkill:'code-generator + open-code-review',
+    agentAction:'按 Stage A→E 流水线实现：A) Spec验证 B) 测试先行(Red) C) contracts→domain→repo→services 逐层实现(Green) D) OCR全量评审+修复 E) 归档。每层运行测试+OCR，不实现 spec 之外的内容。',
+    output:'可运行 TypeScript 代码（33 tests, 0 fail）+ OCR 评审报告（14 files, 22 comments）',
+    artifact:'cloudpilot/',
+    humanReview:'逐 Stage 确认：Red Phase 全部 FAIL、Green Phase 全量测试通过、OCR 0 未解决 issue、覆盖矩阵 100%。签批。',
+    subPhases: [
+      { id:'P5-impl-A', num:'Stage A', title:'Spec 验证', sub:'Human',
+        humanRole:'Tech Lead', humanAction:'提供 spec 和 design，审核验证结果',
+        agentSkill:'spec-validator',
+        agentAction:'形式验证（openspec validate 检查格式完整性）+ 语义验证（LLM 逐项检查 Scenario 覆盖/可测试性/IV-N 全覆盖/状态机边覆盖），输出逐项通过/不通过 + 修复建议',
+        output:'逐项通过/不通过结果',
+        artifact:'Stage-A-preview',
+        humanReview:'全部检查项通过后签字进入 Stage B' },
+      { id:'P5-impl-B', num:'Stage B', title:'测试先行', sub:'Red Phase',
+        humanRole:'Tech Lead', humanAction:'提供 spec 和测试用例清单',
+        agentSkill:'test-generator',
+        agentAction:'从 Scenario 提取测试用例，生成 contracts/__tests__/ 和 services/__tests__/ 下的 .test.ts 文件。使用 Node.js assert，非 Jest。',
+        output:'4 test 文件，npm test 全部 ERR_MODULE_NOT_FOUND',
+        artifact:'Stage-B-preview',
+        humanReview:'确认 Red Phase：全部因模块不存在而 FAIL' },
+      { id:'P5-impl-C', num:'Stage C', title:'逐任务实现', sub:'Green Phase',
+        humanRole:'Tech Lead', humanAction:'逐层确认测试+OCR 结果',
+        agentSkill:'code-generator + open-code-review',
+        agentAction:'按 Layer 1→5 实现：contracts/ → domain/ → repo/ → services/ → http/(可选)。每层: 实现 → 测试 → ocr review -b "spec" --audience agent。',
+        output:'contracts(7) → domain(14) → repo(5) → services(8) = 33 pass',
+        artifact:'Stage-C-preview',
+        humanReview:'每层通过后进入下一层。不实现 spec 中没有的内容。' },
+      { id:'P5-impl-D', num:'Stage D', title:'评审验证', sub:'AI+Human',
+        humanRole:'Tech Lead', humanAction:'审阅 OCR 报告，逐类确认修复',
+        agentSkill:'open-code-review',
+        agentAction:'运行全量 OCR 评审（14 files），将结果按 6 类分组（异常/契约/枚举/防御性/组织/测试），输出修复优先级清单。每轮修复后回归 npm test。',
+        output:'OCR 14 files, 22 comments, 全部修复, 0 未解决',
+        artifact:'Stage-D-preview',
+        humanReview:'确认 Scenario→测试覆盖矩阵 100%，签字进入 Stage E',
+        gate:true },
+      { id:'P5-impl-E', num:'Stage E', title:'归档验收', sub:'Archive',
+        humanRole:'Tech Lead', humanAction:'确认归档决策',
+        agentSkill:'archiver',
+        agentAction:'输出归档条件检查表。Demo/实验性实现可跳过；正式交付执行 openspec archive + OCR 终审 JSON。',
+        output:'p5-final-review.json（或跳过记录）',
+        artifact:'Stage-E-preview',
+        humanReview:'确认代码+测试+规范三者一致' }
+    ] }
 ];
 
-var currentMain = 2, currentSub = -1, modalTab = 0;
+var currentMain = 2, currentSub = -1, modalTab = 0, currentArtifactKey = null;
 
 function getCurrentPhase() {
-  if (currentMain === 3 && currentSub >= 0) return phases[3].subPhases[currentSub];
+  if (hasSubPhases(currentMain) && currentSub >= 0) return phases[currentMain].subPhases[currentSub];
   return phases[currentMain];
 }
 
 function currentPhaseId() {
-  if (currentMain === 3 && currentSub >= 0) return phases[3].subPhases[currentSub].id;
+  if (hasSubPhases(currentMain) && currentSub >= 0) return phases[currentMain].subPhases[currentSub].id;
   return phases[currentMain].id;
 }
 
@@ -330,7 +508,7 @@ function renderTimeline() {
   phases.forEach(function(p, i) {
     var cls = 'phase' + (i === currentMain && currentSub === -1 ? ' active' : '');
     var indCls = i < currentMain ? 'done' : (i === currentMain && currentSub === -1 ? 'current' : 'pending');
-    if (i === 3 && currentMain === 3 && currentSub >= 0) indCls = 'current';
+    if (i === currentMain && hasSubPhases(currentMain) && currentSub >= 0) indCls = 'current';
     html += '<div class="'+cls+'" onclick="selectMain('+i+')">'+
       '<div class="num">'+p.num+'</div>'+
       '<div class="title">'+p.title+'</div>'+
@@ -339,13 +517,14 @@ function renderTimeline() {
   });
   html += '</div>';
 
-  // P3 sub-timeline
-  if (currentMain === 3) {
+  // Sub-timeline for P3 or P5-impl
+  if (currentMain === 3 || currentMain === 7) {
+    var label = currentMain === 3 ? 'P3' : 'P7: 实现';
     html += '<div style="margin-top:8px;display:flex;align-items:center;gap:4px">'+
-      '<span style="font-size:9px;color:#3b82f6;min-width:18px;text-align:center">P3</span>'+
+      '<span style="font-size:9px;color:#3b82f6;min-width:40px;text-align:center">'+label+'</span>'+
       '<span style="color:#334155">▸</span>'+
       '<div class="sub-timeline">';
-    var subPhases = phases[3].subPhases;
+    var subPhases = phases[currentMain].subPhases;
     subPhases.forEach(function(sp, i) {
       var cls = 'phase sub' + (i === currentSub ? ' active' : '');
       if (sp.gate) cls += ' gate';
@@ -448,25 +627,28 @@ function selectMain(i) {
   renderAll();
 }
 function selectSub(i) {
-  currentMain = 3; currentSub = i;
+  currentSub = i;
   renderAll();
 }
+function hasSubPhases(mainIdx) { return phases[mainIdx] && phases[mainIdx].subPhases && phases[mainIdx].subPhases.length > 0; }
 function advancePhase() {
-  if (currentMain === 3 && currentSub < phases[3].subPhases.length - 1 && currentSub >= 0) {
+  if (hasSubPhases(currentMain) && currentSub >= 0 && currentSub < phases[currentMain].subPhases.length - 1) {
     currentSub++;
+  } else if (hasSubPhases(currentMain) && currentSub === -1) {
+    currentSub = 0;
   } else if (currentMain < phases.length - 1) {
     currentMain++; currentSub = -1;
   }
   renderAll();
 }
 function prevPhase() {
-  if (currentMain === 3 && currentSub > 0) {
+  if (hasSubPhases(currentMain) && currentSub > 0) {
     currentSub--;
-  } else if (currentSub === 0) {
+  } else if (hasSubPhases(currentMain) && currentSub === 0) {
     currentSub = -1;
   } else if (currentMain > 0) {
     currentMain--; currentSub = -1;
-    if (currentMain === 3) currentSub = phases[3].subPhases.length - 1;
+    if (hasSubPhases(currentMain)) currentSub = phases[currentMain].subPhases.length - 1;
   }
   renderAll();
 }
@@ -475,23 +657,28 @@ function resetAll() { currentMain = 0; currentSub = -1; renderAll(); }
 // Modal
 function showModal(phaseId, tab) {
   var p = phases.find(function(x){return x.id===phaseId});
-  // check sub-phases too
-  if (!p && phases[3].subPhases) {
-    p = phases[3].subPhases.find(function(x){return x.id===phaseId});
+  // check sub-phases across all phases that have them
+  if (!p) {
+    for (var i = 0; i < phases.length; i++) {
+      if (phases[i].subPhases) {
+        p = phases[i].subPhases.find(function(x){return x.id===phaseId});
+        if (p) break;
+      }
+    }
   }
   if (!p) return;
   document.getElementById('modalTitle').textContent = p.num + ' · ' + p.title;
   modalTab = tab;
   var tabs = '';
   if (prompts[phaseId]) tabs += '<button class="'+(tab===0?'active':'')+'" onclick="switchModalTab(0)">Agent 指令</button>';
-  var artifactKey = p.artifact || (currentMain === 3 ? '03-ddd-modeling.md' : null);
-  if (artifactKey && artifacts_preview[artifactKey]) tabs += '<button class="'+(tab===1?'active':'')+'" onclick="switchModalTab(1)">工件内容</button>';
+  currentArtifactKey = p.artifact || (hasSubPhases(currentMain) ? '03-ddd-modeling.md' : null);
+  if (currentArtifactKey && artifacts_preview[currentArtifactKey]) tabs += '<button class="'+(tab===1?'active':'')+'" onclick="switchModalTab(1)">工件内容</button>';
   document.getElementById('modalTabs').innerHTML = tabs;
-  renderModalBody(artifactKey);
+  renderModalBody(currentArtifactKey);
   document.getElementById('modalOverlay').classList.remove('hidden');
 }
 
-function switchModalTab(t) { modalTab = t; document.querySelectorAll('.modal-tabs button').forEach(function(b,i){ b.className = i===t?'active':''; }); renderModalBody(); }
+function switchModalTab(t) { modalTab = t; document.querySelectorAll('.modal-tabs button').forEach(function(b,i){ b.className = i===t?'active':''; }); renderModalBody(currentArtifactKey); }
 function closeModal() { document.getElementById('modalOverlay').classList.add('hidden'); }
 
 function renderModalBody(artifactKey) {

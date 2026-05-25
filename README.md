@@ -90,14 +90,14 @@ Skill 的深入解读（What / When / How + Claude Code 与 QoderWork 内置 Ski
 
 [![CloudPilot Demo](https://asciinema.org/a/Y2Ka7SqS2MO4UZ77.svg)](https://asciinema.org/a/Y2Ka7SqS2MO4UZ77)
 
-CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Coding 为日常工作模式，走通 DevOps 前 4 阶段（从三方访谈到 OpenSpec 规范）。若推进到 P5 实现阶段，可按 Architecture 三层模型落地：报价走 Tool（确定性计算）、审批走 Skill（固定 SOP）、智能推荐走 Agent（需经验沉淀）。
+CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Coding 为日常工作模式，走通从访谈到可运行代码的完整链路（P1-pre → P7: 实现）。按 Architecture 三层模型落地：报价走 Tool（确定性计算）、审批走 Skill（固定 SOP）、智能推荐走 Agent（需经验沉淀）。
 
-全链路仅需 6 个工件层（访谈记录 → PRD → Mock UI → DDD 模型 → OpenSpec → 代码桥接），所有 Prompt 已记录，可由 `ddd-modeler` 和 `openspec-author` 两个 subagent 端到端重放。
+`/cloudpilot-demo` 一键重放全链路（8 个阶段，22 个 Skill/Agent），所有 Prompt 可复现。Skill 清单（已实现 13 个 / 待实现 9 个）见 [`cloudpilot-case/README.md` §Skill 清单](./cloudpilot-case/README.md#skill-清单)。
 
 | 文件                                                       | 说明                                                                                                     |
 | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
-| [`cloudpilot-case/README.md`](./cloudpilot-case/README.md) | 案例总览、工件追溯表、全部可重放 Prompt                                                                  |
-| `cloudpilot-case/` 下各工件                                | `01-interview-notes.md` → `02-prd.md` → `cloudpilot-mockup.html` → `03-ddd-modeling.md` → `04-openspec/` → `05-p5-code-bridge.md` |
+| [`cloudpilot-case/README.md`](./cloudpilot-case/README.md) | 案例总览、工件追溯表、Skill 清单、全部可重放 Prompt                                                      |
+| `cloudpilot-case/` 下各工件                                | `01-interview-notes.md` → `02-prd.md` → `cloudpilot-mockup.html` → `03-ddd-modeling.md` → `04-openspec/` → `05-p5-code-bridge.md` → `06-p5-implementation-workflow.md` |
 | [`cloudpilot-demo-nav.html`](./cloudpilot-case/cloudpilot-demo-nav.html) | Demo 导航台：交互式阶段时间线 + 人机协同流程图 + 工件预览弹窗 |
 
 ---

@@ -5,6 +5,7 @@
 # AI Assistant
 .qoder
 .claude/skills/
+.claude/scheduled_tasks.lock
 
 
 # High value files
