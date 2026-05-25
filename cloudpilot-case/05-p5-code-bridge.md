@@ -24,7 +24,7 @@ CloudPilot 案例在 P4 产出了 3 份 spec（resource-request / resource-manag
 
 从 `04-openspec/specs/` 的三个 capability 推导出的 monorepo 结构：
 
-```
+```text
 cloudpilot/
 ├── contracts/                     # @cloudpilot/contracts — 共享契约包
 │   ├── src/
