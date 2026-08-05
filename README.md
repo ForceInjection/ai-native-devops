@@ -57,7 +57,7 @@ Skill 的深入解读（What / When / How + Claude Code 与 QoderWork 内置 Ski
 | 文件                                                                                                                                 | 说明                                                    |
 | :----------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------ |
 | [`ai-native-devops/ai-native-devops.md`](./ai-native-devops/ai-native-devops.md)                                                     | 主文章：8 阶段框架、AI 参与度、治理机制、指标与实施路线 |
-| [`ai-native-devops/sdd-paradigms-synthesis.md`](./ai-native-devops/sdd-paradigms-synthesis.md)                                     | 两种 SDD 范式取长补短：范式盲区 → 对方设计取向 → 吸收设计 → CloudPilot `openspec/` 工作区 change 生命周期实录 |
+| [`ai-native-devops/sdd-paradigms-synthesis.md`](./ai-native-devops/sdd-paradigms-synthesis.md)                                     | SDD 实践：AI Native DevOps 基于《SDD 实战》一书取长补短——范式盲区 → 对方设计取向 → 吸收设计 → `openspec/` 工作区 change 生命周期实录 |
 | [`ai-native-devops/ai-native-devops-sample-change-walkthrough.md`](./ai-native-devops/ai-native-devops-sample-change-walkthrough.md) | 演练模板："订单取消"场景的全链路 AI 辅助变更            |
 | [`ai-native-devops/ai-native-devops-panorama.html`](./ai-native-devops/ai-native-devops-panorama.html)                               | 全景图（可交互 HTML）                                   |
 
@@ -99,6 +99,7 @@ CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Codi
 | :--------------------------------------------------------- | :------------------------------------------------------------------------------------------------------- |
 | [`cloudpilot-case/README.md`](./cloudpilot-case/README.md) | 案例总览、工件追溯表、Skill 清单、全部可重放 Prompt                                                      |
 | `cloudpilot-case/` 下各工件                                | `01-interview-notes.md` → `02-prd.md` → `cloudpilot-mockup.html` → `03-ddd-modeling.md` → `04-openspec/` → `05-p5-code-bridge.md` → `06-p5-implementation-workflow.md` |
+| [`cloudpilot-case/openspec/`](./cloudpilot-case/openspec/) | OpenSpec CLI 实况工作区：04-openspec 的 CLI 副本（可校验主基线 + contracts/ + adrs/ + changes/archive），SDD 实践产物 |
 | [`cloudpilot-demo-nav.html`](./cloudpilot-case/cloudpilot-demo-nav.html) | Demo 导航台：交互式阶段时间线 + 人机协同流程图 + 工件预览弹窗 |
 
 ---
@@ -113,6 +114,7 @@ CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Codi
 | **开发与 Tech Lead** | `ai-native-devops/ai-native-devops.md` §4.5, §4.6, §6.1, §7.4, §7.7, §12 + `cloudpilot-case/`                                            |
 | **平台 / SRE 与 QA** | `ai-native-devops/ai-native-devops.md` §4.6, §4.7, §7.5, §7.8, §9, §11.3                                                                 |
 | **想深入理解 Skill 的开发者** | [`skill-deep-dive-for-traditional-dev.md`](./skill-deep-dive-for-traditional-dev.md) — Skill 的 What / When / How + 常见内置 Skill 清单   |
+| **想实践规范驱动 / SDD 的团队** | [`ai-native-devops/sdd-paradigms-synthesis.md`](./ai-native-devops/sdd-paradigms-synthesis.md) — 基于《SDD 实战》的取长补短实践：理论对照 → 吸收设计 → `openspec/` 工作区实录 |
 | **Demo 演示者** | `.claude/skills/cloudpilot-demo/` — `/cloudpilot-demo` 一键重放 + 演示者手册（讲解要点、常见 Q&A） |
 
 ---
@@ -123,7 +125,7 @@ CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Codi
 | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
 | [domain-driven-design-skills](https://github.com/ForceInjection/domain-driven-design-skills) | DDD Skill 开源项目（战略建模 → 战术建模 → OpenSpec 桥接）            |
 | [OpenSpec-practise](https://github.com/ForceInjection/OpenSpec-practise)                     | CloudPilot 的 P5-P7 补充案例：同一套 spec 结构驱动 Node.js + Python 双实现 |
-| [sdd-in-action](https://github.com/huangjia2019/sdd-in-action)                               | 《SDD 实战》配套仓库：规范驱动的习惯方法论、contracts/ADRs 模板、行动营 4 周学习路径（融合与实践见 §2 的 sdd-in-action.md 与 §3 的 CloudPilot openspec 工作区） |
+| [sdd-in-action](https://github.com/huangjia2019/sdd-in-action)                               | 《SDD 实战》配套仓库：规范驱动的习惯方法论、contracts/ADRs 模板、行动营 4 周学习路径（融合与实践见 §2 的 sdd-paradigms-synthesis.md 与 §4 的 CloudPilot openspec 工作区） |
 
 ---
 

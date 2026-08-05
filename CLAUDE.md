@@ -24,7 +24,7 @@ vibe-coding-intro-for-traditional-dev.md   ← Entry point: Agent/MCP/A2A/Skill 
 ├── skill-deep-dive-for-traditional-dev.md  (Skill deep-dive: what/when/how + built-in Skills catalog)
 ├── ai-native-devops/                      ← Core framework (team layer)
 │   ├── ai-native-devops.md                (main article: 8-phase framework, governance, roadmap)
-│   ├── sdd-paradigms-synthesis.md         (两种 SDD 范式取长补短: 我们的范式盲区 → 对方取向 → 吸收设计 → openspec 工作区 change 生命周期实录)
+│   ├── sdd-paradigms-synthesis.md         (SDD 实践: AI Native DevOps 基于《SDD 实战》一书取长补短 — 范式盲区 → 对方取向 → 吸收设计 → openspec 工作区 change 生命周期实录)
 │   ├── ai-native-devops-sample-change-walkthrough.md  (order-cancellation end-to-end example)
 │   ├── ai-native-devops-panorama.html     (interactive framework overview diagram)
 │   ├── ai-native-devops-panorama.png      (static export of the panorama)
@@ -116,7 +116,7 @@ Two open-source repos complement the CloudPilot case study:
 
 - **[ForceInjection/domain-driven-design-skills](https://github.com/ForceInjection/domain-driven-design-skills)** — 9 DDD skills (@ddd-scope through @ddd-openspec-bridge) used in P3 domain modeling.
 - **[ForceInjection/OpenSpec-practise](https://github.com/ForceInjection/OpenSpec-practise)** — Full P4-P7 demo (e-commerce domain): same `proposal/design/tasks/specs` structure drives Node.js AND Python implementations from identical specs. Proves the spec format is language-agnostic. Includes `config.yaml` (AI context injection), archive workflow, and test patterns.
-- **[huangjia2019/sdd-in-action](https://github.com/huangjia2019/sdd-in-action)** — 《SDD 实战》配套仓库 (book-code/ specs 含 contracts/+adrs/ 模板, 行动营 week1-4 学习路径). 融合与实践见 `ai-native-devops/sdd-in-action.md` 与 `cloudpilot-case/openspec/` 工作区；本地克隆在 `~/Project/skills/sdd-in-action` (不入库)。
+- **[huangjia2019/sdd-in-action](https://github.com/huangjia2019/sdd-in-action)** — 《SDD 实战》配套仓库 (book-code/ specs 含 contracts/+adrs/ 模板, 行动营 week1-4 学习路径). 融合与实践见 `ai-native-devops/sdd-paradigms-synthesis.md` 与 `cloudpilot-case/openspec/` 工作区；本地克隆在 `~/Project/skills/sdd-in-action` (不入库)。
 
 **Relation to CloudPilot**: CloudPilot now covers P1-pre → P6(代码桥接) → P7(实现工作流，Stage A→E 生成可运行代码)。OpenSpec-practise 补充了多语言实现(Node.js+Python)和部署/验证阶段。sdd-in-action 补充方法论全集：proposal/design/tasks 之外增加 contracts/+adrs/ 模板（P4 增强）、brownfield 渐进引入（P8）与个人→团队→组织落地路径。三者加在一起形成完整的 8 阶段 walkthrough。
 
