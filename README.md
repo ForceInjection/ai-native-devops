@@ -57,6 +57,7 @@ Skill 的深入解读（What / When / How + Claude Code 与 QoderWork 内置 Ski
 | 文件                                                                                                                                 | 说明                                                    |
 | :----------------------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------ |
 | [`ai-native-devops/ai-native-devops.md`](./ai-native-devops/ai-native-devops.md)                                                     | 主文章：8 阶段框架、AI 参与度、治理机制、指标与实施路线 |
+| [`ai-native-devops/sdd-paradigms-synthesis.md`](./ai-native-devops/sdd-paradigms-synthesis.md)                                     | 两种 SDD 范式取长补短：范式盲区 → 对方设计取向 → 吸收设计 → CloudPilot `openspec/` 工作区 change 生命周期实录 |
 | [`ai-native-devops/ai-native-devops-sample-change-walkthrough.md`](./ai-native-devops/ai-native-devops-sample-change-walkthrough.md) | 演练模板："订单取消"场景的全链路 AI 辅助变更            |
 | [`ai-native-devops/ai-native-devops-panorama.html`](./ai-native-devops/ai-native-devops-panorama.html)                               | 全景图（可交互 HTML）                                   |
 
@@ -122,6 +123,7 @@ CloudPilot 云管平台 MVP 是三层框架交汇的具象验证：以 Vibe Codi
 | :------------------------------------------------------------------------------------------- | :------------------------------------------------------------------- |
 | [domain-driven-design-skills](https://github.com/ForceInjection/domain-driven-design-skills) | DDD Skill 开源项目（战略建模 → 战术建模 → OpenSpec 桥接）            |
 | [OpenSpec-practise](https://github.com/ForceInjection/OpenSpec-practise)                     | CloudPilot 的 P5-P7 补充案例：同一套 spec 结构驱动 Node.js + Python 双实现 |
+| [sdd-in-action](https://github.com/huangjia2019/sdd-in-action)                               | 《SDD 实战》配套仓库：规范驱动的习惯方法论、contracts/ADRs 模板、行动营 4 周学习路径（融合与实践见 §2 的 sdd-in-action.md 与 §3 的 CloudPilot openspec 工作区） |
 
 ---
 

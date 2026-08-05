@@ -15,6 +15,7 @@
 | 7    | [`06-p5-implementation-workflow.md`](./06-p5-implementation-workflow.md) | P7: 实现工作流             | 5 阶段流水线（Spec 验证→测试先行→逐任务实现→评审验证→归档验收），含 `ocr` 集成 |
 | 🎤   | [`cloudpilot-demo-nav.html`](./cloudpilot-demo-nav.html)                 | Demo 演示导航台            | 交互式阶段时间线 + 人机协同流程图 + 工件预览弹窗（演示者投影使用）             |
 | ⚙    | [`config.yaml`](./config.yaml)                                           | AI 上下文注入配置          | schema、context、rules（proposal/specs/design/tasks/frontmatter/naming）       |
+| 🔄   | [`openspec/`](./openspec/)                                               | OpenSpec CLI 实况工作区    | 04-openspec 的 CLI 副本：可校验主基线 + contracts/ + adrs/ + changes/archive（SDD 实践，见 [`sdd-paradigms-synthesis.md`](../ai-native-devops/sdd-paradigms-synthesis.md)） |
 
 ## 链路一览
 

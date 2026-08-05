@@ -4,6 +4,8 @@
 > **上游输入**：[`../03-ddd-modeling.md`](../03-ddd-modeling.md) §V `@ddd-openspec-bridge`
 > **下游消费**：P5 代码生成（spec → code）、P6 评审、P7 部署
 
+> **⚠️ 与 [`../openspec/`](../openspec/) 工作区的关系**：本目录是 **P4 阶段工件（评估基准 Golden Set）**——AI 生成的规范参考产出物，`对比` 命令的比对基准，**只读不改**。[`openspec/`](../openspec/) 是它的 **CLI 实况工作区**（`openspec init` 生成的运行时状态：可校验的主基线 + changes/archive 生命周期，目录名由 CLI 固定）。工作区主基线迁移自本目录（复制+转换，`## ADDED Requirements` → `## Requirements`、补 Purpose/Priority/Rationale），后续演进（如 billing 的 B-1~B-4 派生编号、contracts/+adrs/）只发生在 `openspec/`。两者可 diff 对照、互不覆盖。
+
 ## 文件结构
 
 ```
